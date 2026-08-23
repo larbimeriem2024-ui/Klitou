@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/common/app_color.dart';
-import 'package:flutter_application_9_klitou/common_widgets/my_orders_dish.dart';
-import 'package:flutter_application_9_klitou/services/order_service.dart';
+import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/features/orders/widget/my_orders_dish.dart';
+import 'package:flutter_application_9_klitou/features/orders/repository/order_repository.dart';
 import 'package:flutter_application_9_klitou/views/profile/notification_page.dart';
 
 class MyOrdersPage extends StatefulWidget {
@@ -19,14 +19,14 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
   @override
   void initState() {
     super.initState();
-    cartFuture = OrderService.getPreaparingMeals();
-    pastFuture = OrderService.getPassedMeals();
+    cartFuture = OrderRepository.getPreaparingMeals();
+    pastFuture = OrderRepository.getPassedMeals();
   }
 
   void refreshCart() {
     setState(() {
-      cartFuture = OrderService.getPreaparingMeals();
-      pastFuture = OrderService.getPassedMeals();
+      cartFuture = OrderRepository.getPreaparingMeals();
+      pastFuture = OrderRepository.getPassedMeals();
     });
   }
 

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/notifiers/total_price_notifier.dart';
 import 'package:flutter_application_9_klitou/onboarding/startup_page.dart';
-import 'package:flutter_application_9_klitou/views/login/forget_password_password.dart';
+import 'package:flutter_application_9_klitou/features/auth/pages/login/forget_password_password.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:provider/provider.dart';
 
 
 final GlobalKey<NavigatorState> navigatorKey =
@@ -28,14 +27,9 @@ void main() async {
   }
 });
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) =>TotalPriceNotifier() ,)
-
     
-      ],
-    
-    child: const MyApp()));
+    ProviderScope(
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

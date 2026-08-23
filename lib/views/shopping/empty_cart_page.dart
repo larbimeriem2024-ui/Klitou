@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/common/app_color.dart';
-import 'package:flutter_application_9_klitou/common_widgets/big_title.dart';
-import 'package:flutter_application_9_klitou/common_widgets/button.dart';
-import 'package:flutter_application_9_klitou/common_widgets/recommended_meals.dart';
-import 'package:flutter_application_9_klitou/common_widgets/view_all.dart';
-import 'package:flutter_application_9_klitou/services/meals_service.dart';
-import 'package:flutter_application_9_klitou/views/menu/order_meal.dart';
+import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/core/common_widgets/big_title.dart';
+import 'package:flutter_application_9_klitou/core/common_widgets/button.dart';
+import 'package:flutter_application_9_klitou/core/common_widgets/view_all.dart';
+import 'package:flutter_application_9_klitou/features/meals/state/notifiers/meals_notifier.dart';
+import 'package:flutter_application_9_klitou/features/meals/widgets/recommended_meals.dart';
+import 'package:flutter_application_9_klitou/features/orders/pages/order_meal.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EmptyCartPage extends StatefulWidget {
+class EmptyCartPage extends ConsumerStatefulWidget {
   final VoidCallback exploreDishes;
 
   const EmptyCartPage({super.key, required this.exploreDishes});
   
 
   @override
-  State<EmptyCartPage> createState() => _EmptyCartPageState();
+  ConsumerState<EmptyCartPage> createState() => _EmptyCartPageState();
 }
 
-class _EmptyCartPageState extends State<EmptyCartPage> {
+class _EmptyCartPageState extends ConsumerState<EmptyCartPage> {
   @override
   Widget build(BuildContext context) {
+    final meals = ref.watch(allMealsProvider);
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       body: LayoutBuilder(
@@ -87,53 +89,32 @@ class _EmptyCartPageState extends State<EmptyCartPage> {
                       
                     ],
                   ),
-                  SizedBox(
-                        height: 200,
-                        child: FutureBuilder<List<Map<String, dynamic>>>(
-                                        future: MealsService.getMeals(),
-                                        builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-                        
-                        if (snapshot.hasError) {
-                          return Text(snapshot.error.toString());
-                        }
-                        
-                        final dishes = snapshot.data ?? [];
-                        
-                        return ListView.builder(
+
+                  meals.when(
+                data: (meals) {
+                  return SizedBox(
+                    height: 200,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 2,
+                      itemBuilder: (context, index) {
+                        var dish = meals[index];
+                        return RecommendedMeals(
                           
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 2,
-                          itemBuilder: (context, index) {
-                            
-                            final dish = dishes[index];
-                        
-                            return RecommendedMeals(
-                              image: dish['image_url'],
-                              name: dish['name'],
-                              price: dish['price'].toString(),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => OrderMeal(
-                                      image: dish['image_url'],
-                                      title: dish['name'],
-                                      rank: dish['rating'],
-                                      id: dish['id'],
-                                      price: dish['price'],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        );
-                                        },
-                                      ),
-                      ),
+                        meal: dish ,
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => OrderMeal(meal: dish),));
+                          
+                        },);
+                      }, ),
+                  );
+                }, 
+                error: (error, stackTrace) {
+                  return Text('Error: $error'); 
+                  },
+                loading: (){
+                   return CircularProgressIndicator();})
+                  
                         
                
                

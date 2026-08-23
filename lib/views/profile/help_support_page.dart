@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/common/app_color.dart';
-import 'package:flutter_application_9_klitou/common_widgets/ask_about.dart';
-import 'package:flutter_application_9_klitou/common_widgets/frequently_asked.dart';
+import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/core/common_widgets/ask_about.dart';
+import 'package:flutter_application_9_klitou/core/common_widgets/frequently_asked.dart';
 import 'package:flutter_application_9_klitou/views/profile/notification_page.dart';
 
 List asks = [
@@ -214,11 +214,11 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
                             colors: [
-                              Color(0xFF076148).withOpacity(0.7), // Dark
+                              Color(0xFF076148).withValues(alpha: 0.7), // Dark
                               Color(
-                                0xFF0B7A5A,).withOpacity(0.4), // Slightly lighter
+                                0xFF0B7A5A,).withValues(alpha: 0.4), // Slightly lighter
                               Color(
-                                0xFF10966E,).withOpacity(0.2), // Even lighter
+                                0xFF10966E,).withValues(alpha: 0.2), // Even lighter
                             ],
                             stops: [0.0, 0.5, 1.0],
                           ),

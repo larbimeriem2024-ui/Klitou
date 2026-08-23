@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/common/app_color.dart';
-import 'package:flutter_application_9_klitou/common_widgets/profile_item.dart';
+import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/core/common_widgets/profile_item.dart';
 import 'package:flutter_application_9_klitou/services/profile_service.dart';
 import 'package:flutter_application_9_klitou/views/profile/help_support_page.dart';
 import 'package:flutter_application_9_klitou/views/profile/my_orders_page.dart';

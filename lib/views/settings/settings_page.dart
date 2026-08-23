@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/common/app_color.dart';
-import 'package:flutter_application_9_klitou/common_widgets/white_container.dart';
-import 'package:flutter_application_9_klitou/services/authentication.dart';
-import 'package:flutter_application_9_klitou/views/login/auth_gate.dart';
-import 'package:flutter_application_9_klitou/views/login/sign_up_page.dart';
+import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/core/common_widgets/white_container.dart';
+import 'package:flutter_application_9_klitou/features/auth/pages/login/auth_gate.dart';
+import 'package:flutter_application_9_klitou/features/auth/pages/login/sign_up_page.dart';
+import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
 import 'package:flutter_application_9_klitou/views/profile/notification_page.dart';
 import 'package:flutter_application_9_klitou/views/settings/profile_update_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 List AppInfo = [
   {'title': 'Help & Support', 'image': 'assets/imgs/integoration.png'},
@@ -51,14 +52,14 @@ List account = [
   },
 ];
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends ConsumerState<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -569,7 +570,7 @@ class _SettingsPageState extends State<SettingsPage> {
               SizedBox(height: 32),
               InkWell(
                 onTap: () async {
-                  await Authentication().logOut();
+                  await ref.read(authNotifierProvider.notifier).logout();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

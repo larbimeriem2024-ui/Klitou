@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/common/app_color.dart';
-import 'package:flutter_application_9_klitou/common_widgets/button.dart';
-import 'package:flutter_application_9_klitou/views/login/auth_gate.dart';
-import 'package:flutter_application_9_klitou/views/login/sign_up_page.dart';
+import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/core/common_widgets/button.dart';
+import 'package:flutter_application_9_klitou/features/auth/pages/login/auth_gate.dart';
+import 'package:flutter_application_9_klitou/features/auth/pages/login/sign_up_page.dart';
 
 
 List pages = [

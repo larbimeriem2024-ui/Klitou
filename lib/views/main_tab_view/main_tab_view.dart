@@ -1,20 +1,21 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/common/app_color.dart';
-import 'package:flutter_application_9_klitou/services/authentication.dart';
+import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
+import 'package:flutter_application_9_klitou/features/orders/pages/shopping_page.dart';
 import 'package:flutter_application_9_klitou/services/profile_service.dart';
-import 'package:flutter_application_9_klitou/views/home/home_page.dart';
-import 'package:flutter_application_9_klitou/views/login/auth_gate.dart';
-import 'package:flutter_application_9_klitou/views/login/sign_up_page.dart';
-import 'package:flutter_application_9_klitou/views/menu/menu_page.dart';
+import 'package:flutter_application_9_klitou/features/meals/pages/home_page.dart';
+import 'package:flutter_application_9_klitou/features/auth/pages/login/auth_gate.dart';
+import 'package:flutter_application_9_klitou/features/auth/pages/login/sign_up_page.dart';
+import 'package:flutter_application_9_klitou/features/meals/pages/menu_page.dart';
 import 'package:flutter_application_9_klitou/views/profile/help_support_page.dart';
 import 'package:flutter_application_9_klitou/views/profile/my_orders_page.dart';
 import 'package:flutter_application_9_klitou/views/profile/notification_page.dart';
 import 'package:flutter_application_9_klitou/views/profile/profile_page.dart';
 import 'package:flutter_application_9_klitou/views/settings/settings_page.dart';
 import 'package:flutter_application_9_klitou/views/profile/subscription_page.dart';
-import 'package:flutter_application_9_klitou/views/shopping/cart_switcher.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 List <String> icons = [
 'assets/imgs/home.png',
 'assets/imgs/meal.png',
@@ -80,15 +81,15 @@ List drawerItems= [
 
 
 
-class MainTabView extends StatefulWidget {
+class MainTabView extends ConsumerStatefulWidget {
   
   const MainTabView({super.key, });
 
   @override
-  State<MainTabView> createState() => _MainTabViewState();
+  ConsumerState<MainTabView> createState() => _MainTabViewState();
 }
 
-class _MainTabViewState extends State<MainTabView> {
+class _MainTabViewState extends ConsumerState<MainTabView> {
   bool isLoading = false;
 
    @override
@@ -133,13 +134,7 @@ class _MainTabViewState extends State<MainTabView> {
     },
   ),
   MenuPage(),
-  CartSwitcher(
-    browsDishes: () {
-      setState(() {
-        selectedIndex = 1;
-      });
-    },
-  ),
+  ShoppingPage(),
   ProfilePage()
 ];
 
@@ -295,13 +290,8 @@ late List drawerPage =[
 
                 GestureDetector(
                   onTap: () async {
-                  await Authentication().logOut();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AuthGate(page: SignUpPage()),
-                    ),
-                  );
+                  await ref.read(authNotifierProvider.notifier).logout();
+                 
                 },
                   child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,

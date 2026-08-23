@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/common/app_color.dart';
-import 'package:flutter_application_9_klitou/common_widgets/textfield.dart';
+import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/core/common_widgets/textfield.dart';
 
 class ProfileUpdatePage extends StatefulWidget {
   const ProfileUpdatePage({super.key});
@@ -133,7 +133,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 title: 'Full name',
                 icon: 'assets/imgs/user.png',
                 description1: 'Alex Thompson',
-                validate: (value) {},
+                validate: (value) {
+                  return null;
+                },
                 somethingFocusNode: FocusNode(),
               ),
 
@@ -143,7 +145,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 title: 'email address',
                 icon: 'assets/imgs/email.png',
                 description1: 'meriemlarbi@mail.com',
-                validate: (value) {},
+                validate: (value) {
+                  return null;
+                },
                 somethingFocusNode: FocusNode(),
               ),
               SizedBox(height: 16),
@@ -152,7 +156,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 title: 'phone',
                 icon: 'assets/imgs/phone_icon.png',
                 description1: '0554629787',
-                validate: (value) {},
+                validate: (value) {
+                  return null;
+                },
                 somethingFocusNode: FocusNode(),
               ),
 

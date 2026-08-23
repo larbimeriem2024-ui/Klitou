@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/common/app_color.dart';
+import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/onboarding/onboarding_page.dart';
 import 'package:flutter_application_9_klitou/views/main_tab_view/main_tab_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
