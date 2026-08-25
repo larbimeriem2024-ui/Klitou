@@ -1,5 +1,5 @@
 
-import 'package:flutter_application_9_klitou/core/providers/supabase_client_provider.dart';
+import 'package:flutter_application_9_klitou/shared/providers/supabase_client_provider.dart';
 import 'package:flutter_application_9_klitou/features/meals/models/meal_model.dart';
 import 'package:flutter_application_9_klitou/features/meals/repository/meals_repository.dart';
 import 'package:flutter_application_9_klitou/features/meals/state/notifiers/meals_notifier.dart';

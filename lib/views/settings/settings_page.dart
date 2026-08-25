@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/white_container.dart';
-import 'package:flutter_application_9_klitou/features/auth/pages/login/auth_gate.dart';
-import 'package:flutter_application_9_klitou/features/auth/pages/login/sign_up_page.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/white_container.dart';
 import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
 import 'package:flutter_application_9_klitou/views/profile/notification_page.dart';
 import 'package:flutter_application_9_klitou/views/settings/profile_update_page.dart';
@@ -571,12 +569,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               InkWell(
                 onTap: () async {
                   await ref.read(authNotifierProvider.notifier).logout();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AuthGate(page: SignUpPage()),
-                    ),
-                  );
+                  
                 },
                 child: Container(
                   height: 55,

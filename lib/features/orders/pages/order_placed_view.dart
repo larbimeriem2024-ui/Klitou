@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/big_title.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/button.dart';
-import 'package:flutter_application_9_klitou/views/main_tab_view/main_tab_view.dart';
+import 'package:flutter_application_9_klitou/features/meals/pages/home_page.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
+
 
 class OrderPlacedView extends StatefulWidget {
   final DateTime date;
@@ -71,7 +72,7 @@ class _OrderPlacedViewState extends State<OrderPlacedView> {
                 Button(onClicked: () {
                   Navigator.pushAndRemoveUntil(
                     context, 
-                    MaterialPageRoute(builder: (context) => MainTabView(),),
+                    MaterialPageRoute(builder: (context) => HomePage(),),
                      (route) => false,);
                 }, 
                 color: AppColor.white, title: 'Go to Home', fontColor: AppColor.apptheme, isborder: true), 

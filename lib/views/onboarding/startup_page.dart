@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_9_klitou/app/navigation/main_shell.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/onboarding/onboarding_page.dart';
-import 'package:flutter_application_9_klitou/views/main_tab_view/main_tab_view.dart';
+import 'package:flutter_application_9_klitou/features/meals/pages/home_page.dart';
+import 'package:flutter_application_9_klitou/views/onboarding/onboarding_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StartupPage extends StatefulWidget {
@@ -26,7 +27,7 @@ class _StartupPageState extends State<StartupPage> {
     if(session != null){
        Navigator.pushReplacement(
       context, 
-      MaterialPageRoute(builder: (_) => const MainTabView(),));
+      MaterialPageRoute(builder: (_) => const MainShell(child: HomePage()) ,));
 
     }else{
        Navigator.pushReplacement(

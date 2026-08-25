@@ -1,6 +1,6 @@
 
 
-import 'package:flutter_application_9_klitou/core/providers/supabase_client_provider.dart';
+import 'package:flutter_application_9_klitou/shared/providers/supabase_client_provider.dart';
 import 'package:flutter_application_9_klitou/features/orders/models/order_model.dart';
 import 'package:flutter_application_9_klitou/features/orders/repository/order_repository.dart';
 import 'package:flutter_application_9_klitou/features/orders/state/notifiers/order_notifier.dart';

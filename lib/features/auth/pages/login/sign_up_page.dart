@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/big_title.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/button.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/description_text.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/textfield.dart';
-import 'package:flutter_application_9_klitou/features/auth/pages/login/auth_gate.dart';
-import 'package:flutter_application_9_klitou/features/auth/pages/login/login_page.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/textfield.dart';
 import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUpPage extends ConsumerStatefulWidget {
@@ -71,6 +70,20 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   
   @override
   Widget build(BuildContext context) {
+    final authState = ref.read(authNotifierProvider);
+    final isLoading = authState.isLoading;
+    ref.listen(authNotifierProvider, (previous, next) {
+  next.whenOrNull(
+    error: (error, stackTrace) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
+    },
+
+    
+
+  );
+});
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       appBar: AppBar(
@@ -320,7 +333,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   },
 
                   color: AppColor.apptheme,
-                  title: isLoading? 'Signing up .....':'Sign up ',
+                  title: isLoading? 'loading ...':'Sign up ',
                   fontColor: AppColor.white,
                   isborder: false,
                 ),
@@ -437,10 +450,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     SizedBox(width: 2),
                     InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AuthGate(page: LoginPage())),
-                        );
+                        context.push('/login');
                       },
                       child: Text(
                         'Log in',

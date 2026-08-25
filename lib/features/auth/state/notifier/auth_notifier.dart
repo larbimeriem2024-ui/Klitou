@@ -1,14 +1,23 @@
 
 
 import 'dart:async';
-
+import 'package:flutter_application_9_klitou/features/auth/models/auth_state.dart';
 import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart';
-import 'package:flutter_application_9_klitou/features/auth/state/providers/profile_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthNotifier extends AsyncNotifier<void>{
+class AuthNotifier extends AsyncNotifier<AuthState>{
   @override
-  Future<void> build() async{}
+  Future<AuthState> build() async{
+    final authRepo = ref.watch(authRepositoryProvider);
+
+    
+
+    final subscription = authRepo.authStateChanges.listen((authState) {
+      state = AsyncData(authState);
+    });
+    ref.onDispose(() => subscription.cancel());
+    return authRepo.currentAuthState;
+  }
 
   Future <void> signup({
     required String email, 
@@ -19,17 +28,10 @@ class AuthNotifier extends AsyncNotifier<void>{
   })async{
     state = AsyncLoading();
     state = await AsyncValue.guard(()async{
-      final user = await ref.read(authProvider).signUp(email, password, name, phone);
-
-      if(user == null){
-        throw Exception('user was not created');
-      }
-      print("user created : ${user.id}");
-
-      await ref.read(profileProvider).createProfile(userId: user.id, name: name, email: email, phone: phone);
+      final user = await ref.read(authRepositoryProvider).signUp(email, password, name, phone);
+      return AuthAuthenticated(user);
       
     });
-    print('Profile created');
 
     
 
@@ -43,7 +45,8 @@ class AuthNotifier extends AsyncNotifier<void>{
   }) async{
     state = AsyncLoading();
     state = await AsyncValue.guard(()async{
-      await ref.read(authProvider).login(email, password);
+      await ref.read(authRepositoryProvider).login(email: email, password: password);
+      return state.value ?? const AuthUnauthenticated();
 
     }); 
   }
@@ -51,7 +54,10 @@ class AuthNotifier extends AsyncNotifier<void>{
   Future <void> signInWithGoogle()async{
     state = AsyncLoading();
     state = await AsyncValue.guard(()async{
-      await ref.read(authProvider).signinWithGoogle();
+      print('Starting Google signin');
+      await ref.read(authRepositoryProvider).signinWithGoogle();
+      print('Google signInWithOAth finished');
+      return state.value ?? const AuthUnauthenticated();
 
     });
   }
@@ -59,14 +65,17 @@ class AuthNotifier extends AsyncNotifier<void>{
   Future <void> signInWithFacebook()async{
     state = AsyncLoading();
     state = await AsyncValue.guard(()async{
-      await ref.read(authProvider).signinWithFacebook();
+      await ref.read(authRepositoryProvider).signinWithFacebook();
+      return state.value ?? const AuthUnauthenticated();
     });
   }
 
   Future <void> logout()async{
     state = AsyncLoading();
     state = await AsyncValue.guard(()async{
-      await ref.read(authProvider).logOut();
+      await ref.read(authRepositoryProvider).logOut();
+
+      return const AuthUnauthenticated();
     });
   }
 
@@ -75,7 +84,8 @@ class AuthNotifier extends AsyncNotifier<void>{
   )async{
     state = AsyncLoading();
     state = await AsyncValue.guard(()async{
-      await ref.read(authProvider).verifyEmailForRestPassword(email);
+      await ref.read(authRepositoryProvider).verifyEmailForRestPassword(email);
+      return state.value ?? const AuthUnauthenticated();
     });
   }
 
@@ -84,7 +94,8 @@ class AuthNotifier extends AsyncNotifier<void>{
   )async{
     state = AsyncLoading();
     state = await AsyncValue.guard(()async{
-      await ref.read(authProvider).resetPassword(newPassword);
+      await ref.read(authRepositoryProvider).resetPassword(newPassword);
+      return state.value ?? const AuthUnauthenticated();
 
     });
   }
@@ -92,5 +103,5 @@ class AuthNotifier extends AsyncNotifier<void>{
 
 }
 
-final authNotifierProvider = AsyncNotifierProvider<AuthNotifier, void>(AuthNotifier.new);
+final authNotifierProvider = AsyncNotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
 

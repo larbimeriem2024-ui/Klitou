@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/description_text.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
 import 'package:flutter_application_9_klitou/features/total_Price.dart/state/provider/tota_price_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 class BilletCard extends ConsumerWidget {

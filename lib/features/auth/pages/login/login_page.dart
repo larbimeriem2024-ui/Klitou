@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/big_title.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/button.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/description_text.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/textfield.dart';
-import 'package:flutter_application_9_klitou/features/auth/pages/login/auth_gate.dart';
-import 'package:flutter_application_9_klitou/features/auth/pages/login/forget_password_email.dart';
-import 'package:flutter_application_9_klitou/features/auth/pages/login/sign_up_page.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/textfield.dart';
 import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -50,6 +47,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authNotifierProvider);
+    final isLoading = authState.isLoading;
+    ref.listen(authNotifierProvider, (previous, next) {
+      next.whenOrNull(
+        error: (error, stackTrace) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString()))),
+        
+      );
+    },);
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       appBar: AppBar(
@@ -187,9 +192,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               child: InkWell(
                 
                     onTap: () {
-                      Navigator.push(
-                        context, 
-                        MaterialPageRoute(builder: (context) => ForgetPasswordEmail(),));
+                      context.push('/forgetpassword');
                     },
                     child: Text('forget Password?',
                     style: TextStyle(
@@ -203,26 +206,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             SizedBox(height: 32,),
             Button(onClicked: () async{
              final isValid = _keyForm.currentState!.validate();
-print(isValid);
+          print(isValid);
 
-if (!isValid) {
-  return;
-}
-              try{
+         if (!isValid) {
+        return;
+                 }
+             
                await ref.read(authNotifierProvider.notifier).login(
                email: emailcontroller.text, 
                password:  passwordcontroller.text);
               
-              }
-              on AuthException catch(e){
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(e.message)));
-              }
+             
               
             }, 
             color: AppColor.apptheme, 
-            title: 'Login', 
+            title: isLoading ? 'Loading': 'Login', 
             fontColor:AppColor.white , 
             isborder: false),
             
@@ -241,9 +239,7 @@ if (!isValid) {
 
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (context) => AuthGate(page: SignUpPage()),));
+                    context.push('/signup');
                   },
                   child: Text('Sign Up',
                   style: TextStyle(

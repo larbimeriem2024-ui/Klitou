@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/core/constants/my_classes/time_box.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/date_box.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/quantity_view.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/time_box.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/date_box.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/quantity_view.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/time_box.dart';
 import 'package:flutter_application_9_klitou/features/meals/models/meal_model.dart';
 import 'package:flutter_application_9_klitou/features/orders/models/order_model.dart';
 import 'package:flutter_application_9_klitou/features/orders/state/notifiers/order_notifier.dart';

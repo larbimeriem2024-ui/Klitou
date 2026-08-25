@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/big_title.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/button.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/view_all.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/view_all.dart';
 import 'package:flutter_application_9_klitou/features/meals/state/notifiers/meals_notifier.dart';
 import 'package:flutter_application_9_klitou/features/meals/widgets/recommended_meals.dart';
 import 'package:flutter_application_9_klitou/features/orders/pages/order_meal.dart';

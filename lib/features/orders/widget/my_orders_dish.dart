@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/description_text.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
 
 
 class MyOrdersDish extends StatelessWidget {

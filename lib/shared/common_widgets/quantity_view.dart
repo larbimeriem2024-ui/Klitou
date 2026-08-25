@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/big_title.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
 class QuantityView extends StatefulWidget {
   final Function(int) quantity;
   const QuantityView({super.key, required this.quantity});

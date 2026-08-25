@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/big_title.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/button.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/description_text.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
 import 'package:flutter_application_9_klitou/features/auth/pages/login/forget_password_password.dart';
 
 import 'package:otp_pin_field/otp_pin_field.dart';

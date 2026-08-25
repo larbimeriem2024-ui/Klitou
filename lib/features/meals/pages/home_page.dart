@@ -1,12 +1,15 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/description_text.dart';
+import 'package:flutter_application_9_klitou/features/meals/pages/menu_page.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
 import 'package:flutter_application_9_klitou/features/meals/state/notifiers/meals_notifier.dart';
 import 'package:flutter_application_9_klitou/features/meals/widgets/dish_view.dart';
-import 'package:flutter_application_9_klitou/core/common_widgets/view_all.dart';
+import 'package:flutter_application_9_klitou/shared/common_widgets/view_all.dart';
 import 'package:flutter_application_9_klitou/features/meals/state/providers/meals_provider.dart';
-import 'package:flutter_application_9_klitou/services/profile_service.dart';
 import 'package:flutter_application_9_klitou/features/orders/pages/order_meal.dart';
+import 'package:flutter_application_9_klitou/features/profile/state/providers/profile_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 List <String> row=[
@@ -17,55 +20,24 @@ List <String> row=[
 ];
 
 class HomePage extends ConsumerStatefulWidget {
-  final VoidCallback onShowAll;
-  const HomePage({super.key, required this.onShowAll});
+  const HomePage({super.key,});
 
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  bool isLoading = true;
+ 
   bool isloadingp= false;
   int selected = 0;
   int index = 0;
   
-  final TextEditingController mealSearchController = TextEditingController();
-
-  
-
-  
-  
-
-  @override
-  void initState() {
-    load();
-    super.initState();
-  }
-
-  Future<void> load() async {
-    try {
-      print("Loading profile...");
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      await ProfileService.loadProfile();
-
-      print(ProfileService.name);
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      print('Error is in here check loading data $e');
-    }
-  }
-
+  final TextEditingController mealSearchController = TextEditingController();  
   @override
   Widget build(BuildContext context) {
-    if (isLoading == true) {
-      return const Center(child: CircularProgressIndicator());
-
-    }
+    
     final meals = ref.watch(filteredMealsProvider);
+    final profileAsync = ref.watch(currentProfileProvider);
     
 
     return Scaffold(
@@ -78,7 +50,9 @@ class _HomePageState extends ConsumerState<HomePage> {
             children: [
               SizedBox(height: 8),
 
-              Row(
+              profileAsync.when(
+                    data: (profile) {
+                    return  Row(
                 children: [
                   Text(
                     'hey, ',
@@ -88,9 +62,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+
+                  
                   Expanded(
-                    child: Text(
-                      '${ProfileService.name} ',
+                    child: Text(profile.name,
                       style: TextStyle(
                         color: AppColor.apptheme,
                         fontSize: 30,
@@ -99,7 +74,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ),
                 ],
-              ),
+              );
+                  }, 
+                  error: (error, stackTrace) => Text(error.toString()), 
+                  loading: () => CircularProgressIndicator(),),
+
+             
 
               SizedBox(height: 2),
               DescriptionText(title: 'Ready for your next study session meal?'),
@@ -193,7 +173,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ),
 
-                  ViewAll(onPressed: widget.onShowAll),
+                  ViewAll(onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuPage(),));
+                  },),
                 ],
               ),
 
