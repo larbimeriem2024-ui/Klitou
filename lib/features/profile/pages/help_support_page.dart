@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/ask_about.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/frequently_asked.dart';
-import 'package:flutter_application_9_klitou/views/profile/notification_page.dart';
+import 'package:flutter_application_9_klitou/features/profile/pages/notification_page.dart';
+import 'package:go_router/go_router.dart';
 
 List asks = [
   {
@@ -56,7 +57,7 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                context.pop();
               },
               child: Image.asset('assets/imgs/back.png', height: 25, width: 25),
             ),

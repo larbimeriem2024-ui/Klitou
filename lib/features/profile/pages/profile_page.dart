@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/profile_item.dart';
 import 'package:flutter_application_9_klitou/features/profile/state/providers/profile_provider.dart';
-import 'package:flutter_application_9_klitou/views/profile/help_support_page.dart';
-import 'package:flutter_application_9_klitou/views/profile/my_orders_page.dart';
-import 'package:flutter_application_9_klitou/views/profile/notification_page.dart';
-import 'package:flutter_application_9_klitou/views/settings/settings_page.dart';
-import 'package:flutter_application_9_klitou/views/profile/subscription_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
@@ -48,11 +43,11 @@ List items = [
 
 
 List pages = [
-  MyOrdersPage(),
-  SubscriptionPage(),
-  NotificationPage(),
-  HelpSupportPage(),
-  SettingsPage()
+  '/orders',
+  '/subscriptions',
+  '/notifications',
+  '/help',
+  '/settings',
 
 
 

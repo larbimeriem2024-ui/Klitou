@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_9_klitou/app/navigation/main_shell.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/features/meals/pages/home_page.dart';
-import 'package:flutter_application_9_klitou/views/onboarding/onboarding_page.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 class StartupPage extends StatefulWidget {
   const StartupPage({super.key});
@@ -14,28 +11,7 @@ class StartupPage extends StatefulWidget {
 
 class _StartupPageState extends State<StartupPage> {
 
-  @override
-  void initState(){
-    super.initState();
-    _checkUserSessionn();
-  }
-
-  Future <void> _checkUserSessionn()async{
-    final session = Supabase.instance.client.auth.currentSession;
-    await Future.delayed(Duration(seconds: 3)
-    );
-    if(session != null){
-       Navigator.pushReplacement(
-      context, 
-      MaterialPageRoute(builder: (_) => const MainShell(child: HomePage()) ,));
-
-    }else{
-       Navigator.pushReplacement(
-      context, 
-      MaterialPageRoute(builder: (_) => const OnboardingPage(),));
-    }
-   
-  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

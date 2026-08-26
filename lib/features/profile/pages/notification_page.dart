@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/notification_box.dart';
+import 'package:go_router/go_router.dart';
 
 List<String> rowp = ['All', 'Orders', 'Promos'];
 
@@ -65,7 +66,7 @@ class _NotificationPageState extends State<NotificationPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                context.pop();
               },
               child: Image.asset('assets/imgs/back.png', height: 25, width: 25),
             ),

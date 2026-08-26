@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:go_router/go_router.dart';
 
 
 
@@ -10,7 +11,7 @@ import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 class ProfileItem extends StatelessWidget {
   final String image;
   final String title;
-  final Widget thePage;
+  final String thePage;
   const ProfileItem({super.key, required this.image, required this.title, required this.thePage});
 
   @override
@@ -18,7 +19,7 @@ class ProfileItem extends StatelessWidget {
     var media = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => thePage,));
+        context.push(thePage);
       },
       child: Container(
         height: 72,

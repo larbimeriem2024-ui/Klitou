@@ -10,14 +10,14 @@ import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_n
 import 'package:flutter_application_9_klitou/features/meals/pages/home_page.dart';
 import 'package:flutter_application_9_klitou/features/meals/pages/menu_page.dart';
 import 'package:flutter_application_9_klitou/features/orders/pages/shopping_page.dart';
-import 'package:flutter_application_9_klitou/views/onboarding/onboarding_page.dart';
-import 'package:flutter_application_9_klitou/views/onboarding/startup_page.dart';
-import 'package:flutter_application_9_klitou/views/profile/help_support_page.dart';
-import 'package:flutter_application_9_klitou/views/profile/my_orders_page.dart';
-import 'package:flutter_application_9_klitou/views/profile/notification_page.dart';
-import 'package:flutter_application_9_klitou/views/profile/profile_page.dart';
-import 'package:flutter_application_9_klitou/views/profile/subscription_page.dart';
-import 'package:flutter_application_9_klitou/views/settings/settings_page.dart';
+import 'package:flutter_application_9_klitou/features/onboarding/onboarding_page.dart';
+import 'package:flutter_application_9_klitou/features/onboarding/startup_page.dart';
+import 'package:flutter_application_9_klitou/features/profile/pages/help_support_page.dart';
+import 'package:flutter_application_9_klitou/features/orders/pages/my_orders_page.dart';
+import 'package:flutter_application_9_klitou/features/profile/pages/notification_page.dart';
+import 'package:flutter_application_9_klitou/features/profile/pages/profile_page.dart';
+import 'package:flutter_application_9_klitou/features/profile/pages/subscription_page.dart';
+import 'package:flutter_application_9_klitou/features/settings/settings_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,9 +28,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
   final authState = ref.watch(authNotifierProvider);
 
-  print('AUTH STATE → $authState');
-  print('AUTH VALUE → ${authState.value}');
-  print('CURRENT PATH → ${state.matchedLocation}');
+  
   final currentPath = state.matchedLocation;
 
   // Still loading auth state → stay on splash
@@ -45,14 +43,29 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       currentPath == '/onboarding' ||
       currentPath == '/splash';
 
-  // Not logged in
-  if (!isLoggedIn && !isAuthRoute) {
+  
+  // 2. Not logged in
+  if (!isLoggedIn) {
+    // If we are on splash after loading finished → go to onboarding or login
+    if (currentPath == '/splash') {
+      return '/onboarding'; // or '/login' if you prefer
+    }
+
+    // Already on an auth page → stay
+    if (isAuthRoute) {
+      return null;
+    }
+
+    // Trying to access protected pages → send to login
     return '/login';
   }
 
-  // Logged in but on auth pages
-  if (isLoggedIn && isAuthRoute) {
-    return '/home';
+  // 3. Logged in
+  if (isLoggedIn) {
+    // Coming from splash or any auth page → go to home
+    if (currentPath == '/splash' || isAuthRoute) {
+      return '/home';
+    }
   }
 
   return null;
