@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/features/meals/pages/home_page.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
+import 'package:go_router/go_router.dart';
 
 
 class OrderPlacedView extends StatefulWidget {
-  final DateTime date;
-  const OrderPlacedView({super.key, required this.date});
+  final String item;
+  const OrderPlacedView({super.key, required this.item});
 
   @override
   State<OrderPlacedView> createState() => _OrderPlacedViewState();
@@ -39,11 +39,11 @@ class _OrderPlacedViewState extends State<OrderPlacedView> {
                   ),
               ),
 
-              BigTitle(title: 'Order Placed'),
+              BigTitle(title: 'Item Added'),
               SizedBox(height: 8),
 
               Text(
-                'Your food has been ordered.\nYou will Inshallah receive your order in this date\n ${widget.date}',
+                'You have added ${widget.item} to your Cart ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColor.description,
@@ -52,30 +52,23 @@ class _OrderPlacedViewState extends State<OrderPlacedView> {
                 ),
               ),
 
-              SizedBox(height: 8,),
+              SizedBox(height: 16,),
+               Button(onClicked: () {
+                  context.go('/cart');
+                }, 
+                color: AppColor.apptheme, title: 'Check Cart', fontColor: AppColor.white, isborder: false), 
+                SizedBox(height: 16,),
 
-              Text(
-                'code #5218209945',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColor.fontColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
+                Text('or'),
 
-                
-                
-                ),
+             
 
                 SizedBox(height: 16,),
 
                 Button(onClicked: () {
-                  Navigator.pushAndRemoveUntil(
-                    context, 
-                    MaterialPageRoute(builder: (context) => HomePage(),),
-                     (route) => false,);
+                  context.go('/menu');
                 }, 
-                color: AppColor.white, title: 'Go to Home', fontColor: AppColor.apptheme, isborder: true), 
+                color: AppColor.white, title: 'explore more meals', fontColor: AppColor.apptheme, isborder: true), 
 
                 SizedBox(height: 16,), 
             ],

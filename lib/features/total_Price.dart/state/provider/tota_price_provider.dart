@@ -1,6 +1,6 @@
 
 
-import 'package:flutter_application_9_klitou/features/orders/state/notifiers/order_notifier.dart';
+import 'package:flutter_application_9_klitou/features/orders/state/providers/order_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final totalPriceProvider = Provider<double>((ref) {

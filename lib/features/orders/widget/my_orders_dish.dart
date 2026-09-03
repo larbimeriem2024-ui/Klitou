@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/features/orders/models/my_order_model.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
 
 
 class MyOrdersDish extends StatelessWidget {
-  final String image;
-  final String title;
-  final String price;
-  final int quantity;
-  final DateTime date;
-  final int index;
+  final MyOrder order;
   final bool isInProgress;
   const MyOrdersDish({
     super.key, 
-    required this.image,
-    required this.title,
-    required this.price,
-    required this.quantity,
-    required this.date,
-    required this.index,
+    
+    required this.order,
     required this.isInProgress
   
   
@@ -43,7 +35,7 @@ class MyOrdersDish extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadiusGeometry.circular(15),
               child: Image.network(
-                image,
+                order.meal.image,
                 width: (media.width / 2) - 60,
                 height: 250,
                 fit: BoxFit.cover,
@@ -59,7 +51,7 @@ class MyOrdersDish extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        title,
+                        order.meal.title,
                         style: TextStyle(
                           color: AppColor.fontColor,
                           fontSize: 16,
@@ -100,7 +92,7 @@ class MyOrdersDish extends StatelessWidget {
                         ),
                   
                       SizedBox(width: 5,), 
-                      DescriptionText(title: date.toString().split('.').first.substring(0,16)),
+                      DescriptionText(title: (order.deliveryDate).toString().split('.').first.substring(0,16)),
                   
                        
                     ],
@@ -112,7 +104,7 @@ class MyOrdersDish extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
                        Text(
-                        '$price DZ',
+                        '${order.price} DZ',
                         style: TextStyle(
                           color: AppColor.apptheme,
                           fontSize: 14,

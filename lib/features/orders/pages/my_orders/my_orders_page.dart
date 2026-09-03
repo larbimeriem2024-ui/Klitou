@@ -1,37 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/features/orders/state/providers/order_provider.dart';
 import 'package:flutter_application_9_klitou/features/orders/widget/my_orders_dish.dart';
-import 'package:flutter_application_9_klitou/features/orders/repository/order_repository.dart';
-import 'package:flutter_application_9_klitou/features/profile/pages/notification_page.dart';
 
-class MyOrdersPage extends StatefulWidget {
+import 'package:flutter_application_9_klitou/features/profile/pages/notification_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class MyOrdersPage extends ConsumerStatefulWidget {
   const MyOrdersPage({super.key});
 
   @override
-  State<MyOrdersPage> createState() => _MyOrdersPageState();
+  ConsumerState<MyOrdersPage> createState() => _MyOrdersPageState();
 }
 
-class _MyOrdersPageState extends State<MyOrdersPage> {
-  late Future<List<Map<String, dynamic>>> cartFuture;
-  late Future<List<Map<String, dynamic>>> pastFuture;
+class _MyOrdersPageState extends ConsumerState<MyOrdersPage> {
+  
 
 
-  @override
-  void initState() {
-    super.initState();
-    cartFuture = OrderRepository.getPreaparingMeals();
-    pastFuture = OrderRepository.getPassedMeals();
-  }
 
-  void refreshCart() {
-    setState(() {
-      cartFuture = OrderRepository.getPreaparingMeals();
-      pastFuture = OrderRepository.getPassedMeals();
-    });
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
+    final myPreparingOrders = ref.watch(preparingOrderProvider);
+    final myDoneOrders = ref.watch(myDoneOrderProvider);
+    final onGoingOrders = myPreparingOrders.value!.length;
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       appBar: AppBar(
@@ -88,7 +81,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                   ),
 
                   Text(
-                    '1 Active',
+                    '$onGoingOrders Active',
                     style: TextStyle(
                       color: AppColor.description,
                       fontSize: 14,
@@ -100,43 +93,30 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
 
               SizedBox(height: 16),
 
-              FutureBuilder(
-                future: cartFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+              myPreparingOrders.when(
+                data: (order) {
 
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-
-                  final dishes = snapshot.data ?? [];
-
-                  return ListView.builder(
+                return ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: dishes.length,
+                    itemCount: order.length,
                     itemBuilder: (context, index) {
-                      final dish = dishes[index];
+                      final dish = order[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: GestureDetector(
                           onTap: () {},
                           child: MyOrdersDish(
-                            image: dish['meals']['image_url'],
-                            title: dish['meals']['name'],
-                            price: (dish['meals']['price']).toString(),
-                            quantity: dish['unit_price']!,
-                            date: DateTime.parse(dish['pickup_date']),
-                            index: 0,
-                            isInProgress: true,
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                           order: dish,
+                           isInProgress: true,
+                          ),));
+              });},
+              error: (error, stackTrace) {
+                
+                return Text(error.toString());
+                
                 },
+              loading: () => CircularProgressIndicator(),
               ),
 
               SizedBox(height: 16),
@@ -151,44 +131,33 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
 
               SizedBox(height: 16),
 
-              FutureBuilder(
-                future: pastFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+              myDoneOrders.when(
+                data: (order) {
 
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-
-                  final dishes = snapshot.data ?? [];
-
-                  return ListView.builder(
+                return ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: dishes.length,
+                    itemCount: order.length,
                     itemBuilder: (context, index) {
-                      final dish = dishes[index];
+                      final dish = order[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: GestureDetector(
                           onTap: () {},
                           child: MyOrdersDish(
-                            image: dish['meals']['image_url'],
-                            title: dish['meals']['name'],
-                            price: (dish['meals']['price']).toString(),
-                            quantity: dish['unit_price']!,
-                            date: DateTime.parse(dish['pickup_date']),
-                            index: 0,
-                            isInProgress: true,
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                           order: dish,
+                           isInProgress: false,
+                          ),));
+              });},
+              error: (error, stackTrace) {
+                
+                return Text(error.toString());
+                
                 },
+              loading: () => CircularProgressIndicator(),
               ),
+
+              
             ],
           ),
         ),

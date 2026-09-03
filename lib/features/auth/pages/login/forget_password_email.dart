@@ -3,7 +3,7 @@ import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
-import 'package:flutter_application_9_klitou/shared/common_widgets/textfield.dart';
+import 'package:flutter_application_9_klitou/features/auth/widgets/textfield.dart';
 import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,7 +32,6 @@ class _ForgetPasswordEmailState extends ConsumerState<ForgetPasswordEmail> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     emailFocus.dispose();
     super.dispose();
   }
@@ -87,7 +86,7 @@ class _ForgetPasswordEmailState extends ConsumerState<ForgetPasswordEmail> {
             SizedBox(height: 48,),
             Button(
               onClicked: () async{
-                if(_keyForm.currentState!.validate()){
+                if(!_keyForm.currentState!.validate()){
                   return;
                   
 

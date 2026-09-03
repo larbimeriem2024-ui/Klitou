@@ -1,9 +1,9 @@
 
 
-class userModel{
+class UserModel{
   final String name;
   final String email; 
-  userModel({
+  UserModel({
     required this.name,
     required this.email
 

@@ -3,11 +3,10 @@ import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
-import 'package:flutter_application_9_klitou/shared/common_widgets/textfield.dart';
+import 'package:flutter_application_9_klitou/features/auth/widgets/textfield.dart';
 import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage({super.key});
@@ -17,11 +16,9 @@ class SignUpPage extends ConsumerStatefulWidget {
 }
 
 class _SignUpPageState extends ConsumerState<SignUpPage> {
-  bool isLoading = false;
   bool isPWHidden = true;
 
   final _formKey = GlobalKey<FormState>();
-  final session = Supabase.instance.client.auth.currentSession;
   final emailRegex = RegExp(
   r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',);
 
@@ -52,7 +49,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     
     
     namecontroller.dispose();
@@ -70,7 +66,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   
   @override
   Widget build(BuildContext context) {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.watch(authNotifierProvider);
     final isLoading = authState.isLoading;
     ref.listen(authNotifierProvider, (previous, next) {
   next.whenOrNull(
@@ -94,7 +90,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                context.go('/onboarding');
               },
               
               child: SizedBox(
@@ -217,7 +213,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
           'Password',
           style: TextStyle(
             color: AppColor.fontColor,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             fontSize: 16,
           ),
         ),
@@ -252,6 +248,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 prefixIcon: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Image.asset('assets/imgs/ps_icon.png',
+                  color: AppColor.description,
                                 width: 8,
                                 height: 8,),
                 ),
@@ -269,7 +266,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               fillColor: AppColor.fieldBg,
             
               hint: Text(
-                'Enter your Passwrod, ',
+                'Enter your Password, ',
                 style: TextStyle(
                   color: AppColor.fieldText,
                   fontWeight: FontWeight.w400,
@@ -312,7 +309,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     
                     
                       final isValid = _formKey.currentState!.validate();
-                      print(isValid);
+                      
 
                       if (!isValid) {
                         return;
@@ -338,111 +335,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   isborder: false,
                 ),
 
-                SizedBox(height: 32),
-                Center(child: DescriptionText(title: 'Or')),
-                SizedBox(height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        await ref.read(authNotifierProvider.notifier).signInWithGoogle();
-                        
-                       
-                          
-                        
-                      },
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: AppColor.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.15),
-                              blurRadius: 2,
-                              spreadRadius: 0,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
-
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Image.asset(
-                            'assets/imgs/google.png',
-                            width: 20,
-                            height: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(width: 16),
-
-                    Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: AppColor.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.15),
-                            blurRadius: 2,
-                            spreadRadius: 0,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Image.asset(
-                          'assets/imgs/apple-logo.png',
-                          width: 20,
-                          height: 20,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(width: 16),
-
-                    GestureDetector(
-                      onTap: () {
-                        ref.read(authNotifierProvider.notifier).signInWithFacebook();
-                      },
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: AppColor.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.15),
-                              blurRadius: 2,
-                              spreadRadius: 0,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
-
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Image.asset(
-                            'assets/imgs/facebook.png',
-                            width: 20,
-                            height: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
                 SizedBox(height: 48),
+               
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -464,7 +358,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   ],
                 ),
 
-                SizedBox(height: 32),
+                SizedBox(height: 100,)
+            
               ],
             ),
           ),

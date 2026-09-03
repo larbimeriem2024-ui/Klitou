@@ -3,8 +3,8 @@ import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/features/meals/state/notifiers/meals_notifier.dart';
 import 'package:flutter_application_9_klitou/features/meals/state/providers/meals_provider.dart';
 import 'package:flutter_application_9_klitou/features/meals/widgets/dish_view.dart';
-import 'package:flutter_application_9_klitou/features/orders/pages/order_meal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 
 List <String> row=[
@@ -145,7 +145,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                           
                         meal: dish ,
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => OrderMeal(meal: dish),));
+                          context.push('/order-meal', extra: dish);
                           
                         },),
                       );

@@ -5,17 +5,22 @@ import 'package:flutter_application_9_klitou/app/navigation/main_shell.dart';
 import 'package:flutter_application_9_klitou/features/auth/models/auth_state.dart';
 import 'package:flutter_application_9_klitou/features/auth/pages/login/forget_password_email.dart';
 import 'package:flutter_application_9_klitou/features/auth/pages/login/login_page.dart';
+import 'package:flutter_application_9_klitou/features/auth/pages/login/reset_password_page.dart';
 import 'package:flutter_application_9_klitou/features/auth/pages/login/sign_up_page.dart';
 import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
+import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart' hide authNotifierProvider;
+import 'package:flutter_application_9_klitou/features/meals/models/meal_model.dart';
 import 'package:flutter_application_9_klitou/features/meals/pages/home_page.dart';
 import 'package:flutter_application_9_klitou/features/meals/pages/menu_page.dart';
-import 'package:flutter_application_9_klitou/features/orders/pages/shopping_page.dart';
+import 'package:flutter_application_9_klitou/features/orders/pages/my_orders/my_orders_switcher.dart';
+import 'package:flutter_application_9_klitou/features/orders/pages/order_meal.dart';
+import 'package:flutter_application_9_klitou/features/orders/pages/shopping/cart_switcher.dart';
 import 'package:flutter_application_9_klitou/features/onboarding/onboarding_page.dart';
 import 'package:flutter_application_9_klitou/features/onboarding/startup_page.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/help_support_page.dart';
-import 'package:flutter_application_9_klitou/features/orders/pages/my_orders_page.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/notification_page.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/profile_page.dart';
+import 'package:flutter_application_9_klitou/features/profile/pages/profile_update_page.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/subscription_page.dart';
 import 'package:flutter_application_9_klitou/features/settings/settings_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,13 +28,23 @@ import 'package:go_router/go_router.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
 
-  return GoRouter(
+  final router = GoRouter(
     initialLocation: '/splash',
     redirect: (context, state) {
-  final authState = ref.watch(authNotifierProvider);
+  final authState = ref.read(authNotifierProvider);
+  final splashState = ref.read(splashProvider);
+
+  if (authState.value is AuthPasswordRecovery) {
+    return '/resetpassword';
+}
 
   
   final currentPath = state.matchedLocation;
+
+  if (!splashState.hasValue) {
+    return currentPath == '/splash' ? null : '/splash';
+  }
+
 
   // Still loading auth state → stay on splash
   if (authState.isLoading || authState.isRefreshing) {
@@ -41,7 +56,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   final isAuthRoute = currentPath == '/login' ||
       currentPath == '/signup' ||
       currentPath == '/onboarding' ||
-      currentPath == '/splash';
+      currentPath =='/forgetpassword' ;
+
 
   
   // 2. Not logged in
@@ -54,6 +70,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     // Already on an auth page → stay
     if (isAuthRoute) {
       return null;
+      
     }
 
     // Trying to access protected pages → send to login
@@ -94,6 +111,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ForgetPasswordEmail(),
       ),
 
+      GoRoute(
+  path: '/resetpassword',
+  builder: (context, state) => const ResetPasswordPage(),
+),
+
       ShellRoute(
         builder: (context, state, child) {
           return MainShell(child: child);
@@ -112,7 +134,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(
       path: '/cart',
       name: 'cart',
-      builder: (context, state) => const ShoppingPage(),
+      builder: (context, state) => const CartSwitcher(),
     ),
     GoRoute(
       path: '/profile',
@@ -122,9 +144,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   ],
 ),
 
+
    GoRoute(
         path: '/orders',
-        builder: (context, state) => const MyOrdersPage(),
+        builder: (context, state) => const MyOrdersSwitcher(),
       ),
       GoRoute(
         path: '/subscriptions',
@@ -142,11 +165,40 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         builder: (context, state) => const SettingsPage(),
       ),
+      GoRoute(
+        path: '/profileupdate',
+        builder: (context, state) => const ProfileUpdatePage(),
+      ),
+      GoRoute(
+  path: '/order-meal',
+  builder: (context, state) {
+    final dish = state.extra as Meal;
+
+    return OrderMeal(meal: dish);
+  },
+),
+      
         
     ],
 
     
     
   );
+
+  ref.listen(
+    authNotifierProvider,
+    (_, _) {
+      router.refresh();
+    },
+  );
+
+  ref.listen(
+  splashProvider,
+  (_, _) {
+    router.refresh();
+  },
+);
+
+  return router;
 });
 

@@ -33,3 +33,9 @@ final currentUserProvider = Provider<User?>((ref) {
 final isAuthenticatedProvider = Provider<bool>((ref) {
   return ref.watch(currentUserProvider) != null;
 });
+
+
+final splashProvider = FutureProvider<bool>((ref) async {
+  await Future.delayed(const Duration(seconds: 3));
+  return true;
+});

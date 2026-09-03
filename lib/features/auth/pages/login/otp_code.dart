@@ -3,7 +3,7 @@ import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
-import 'package:flutter_application_9_klitou/features/auth/pages/login/forget_password_password.dart';
+import 'package:flutter_application_9_klitou/features/auth/pages/login/reset_password_page.dart';
 
 import 'package:otp_pin_field/otp_pin_field.dart';
 
@@ -87,17 +87,15 @@ class _OtpCodeState extends State<OtpCode> {
             ///in case you want to change the action of keyboard
             /// to clear the Otp pin Controller
             onSubmit: (text) {
-              print('Entered pin is $text');
-
+             
               /// return the entered pin
             },
             onChange: (text) {
-              print('Enter on change pin is $text');
-
+              
               /// return the entered pin
             },
             onCodeChanged: (code) {
-              print('onCodeChanged  is $code');
+              
             },
 
             /// to decorate your Otp_Pin_Field
@@ -166,7 +164,7 @@ class _OtpCodeState extends State<OtpCode> {
                 SizedBox(height: 10),
                 ElevatedButton(
                     onPressed: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ForgetPasswordPassword())),
+                        MaterialPageRoute(builder: (context) => ResetPasswordPage())),
                     child: Text('Next ')),
                 SizedBox(height: 30),
               ],
@@ -222,7 +220,7 @@ class _OtpCodeState extends State<OtpCode> {
           Button(onClicked: () {
             Navigator.push(
               context, 
-              MaterialPageRoute(builder: (context) => ForgetPasswordPassword(),));
+              MaterialPageRoute(builder: (context) => ResetPasswordPage(),));
           }, 
           color: AppColor.apptheme, 
           title: 'Send', 

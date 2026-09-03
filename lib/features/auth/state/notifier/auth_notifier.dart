@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'package:flutter_application_9_klitou/features/auth/models/auth_state.dart';
 import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart';
+import 'package:flutter_application_9_klitou/features/meals/state/providers/meals_provider.dart';
+import 'package:flutter_application_9_klitou/features/orders/state/providers/order_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthNotifier extends AsyncNotifier<AuthState>{
@@ -54,9 +56,9 @@ class AuthNotifier extends AsyncNotifier<AuthState>{
   Future <void> signInWithGoogle()async{
     state = AsyncLoading();
     state = await AsyncValue.guard(()async{
-      print('Starting Google signin');
+      
       await ref.read(authRepositoryProvider).signinWithGoogle();
-      print('Google signInWithOAth finished');
+      
       return state.value ?? const AuthUnauthenticated();
 
     });
@@ -75,6 +77,10 @@ class AuthNotifier extends AsyncNotifier<AuthState>{
     state = await AsyncValue.guard(()async{
       await ref.read(authRepositoryProvider).logOut();
 
+      ref.invalidate(allOrdersProvider);
+      ref.invalidate(getMealsProvider);
+      ref.invalidate(preparingOrderProvider);
+      ref.invalidate(myDoneOrderProvider);
       return const AuthUnauthenticated();
     });
   }

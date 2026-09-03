@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/core/constants/my_classes/time_box.dart';
+import 'package:flutter_application_9_klitou/features/orders/state/providers/order_provider.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/date_box.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/quantity_view.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/time_box.dart';
 import 'package:flutter_application_9_klitou/features/meals/models/meal_model.dart';
 import 'package:flutter_application_9_klitou/features/orders/models/order_model.dart';
-import 'package:flutter_application_9_klitou/features/orders/state/notifiers/order_notifier.dart';
-import 'package:flutter_application_9_klitou/features/orders/pages/order_placed_view.dart';
+import 'package:flutter_application_9_klitou/features/orders/pages/order_added_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 
-final Mealtimes = [
+final mealtimes = [
   TimeBoxF(period: 'Lunch', time: TimeOfDay(hour: 12, minute: 30)),
   TimeBoxF(period: 'Noon', time: TimeOfDay(hour: 13, minute: 15)),
 ];
@@ -31,7 +32,6 @@ class OrderMeal extends ConsumerStatefulWidget {
 
 class _OrderMealState extends ConsumerState<OrderMeal> {
   int selectedIndexTime = 0;
-
   int selectedIndexDay = 0;
   int quantity = 1;
   DateTime date = DateTime.now();
@@ -44,7 +44,7 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
   );
   late DateTime selectedDate;
 
-  TimeOfDay selectedTime = Mealtimes[0].time;
+  TimeOfDay selectedTime = mealtimes[0].time;
 
   @override
   void initState() {
@@ -69,14 +69,13 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
                   width: media.width,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    print(error);
                     return const Center(child: Text("Image failed to load"));
                   },
                 ),
 
                 InkWell(
                   onTap: () {
-                    Navigator.pop(context);
+                      context.pop();
                   },
                   child: SafeArea(
                     child: Padding(
@@ -171,8 +170,8 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
                           ),
                         ),
                         QuantityView(
-                          quantity: (ValueChanged) {
-                            quantity = ValueChanged;
+                          quantity: (valueChanged) {
+                            quantity = valueChanged;
                           },
                         ),
                       ],
@@ -213,19 +212,19 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
 
-                        itemCount: Mealtimes.length,
+                        itemCount: mealtimes.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: TimeBox(
-                              time: Mealtimes[index].time,
-                              period: Mealtimes[index].period,
+                              time: mealtimes[index].time,
+                              period: mealtimes[index].period,
                               isSelected: selectedIndexTime == index,
                               onTap: () {
                                 setState(() {
                                   selectedIndexTime = index;
                                   selectedTime =
-                                      Mealtimes[selectedIndexTime].time;
+                                      mealtimes[selectedIndexTime].time;
                                 });
                               },
                             ),
@@ -327,7 +326,7 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
                             backgroundColor: AppColor.backgroundColor,
                             context: context,
                             isScrollControlled: true,
-                            builder: (context) => OrderPlacedView(date: date),
+                            builder: (context) => OrderPlacedView(item: widget.meal.title),
                           );
                         } catch (e) {
                           if (!context.mounted) return;

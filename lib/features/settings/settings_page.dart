@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/white_container.dart';
 import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
-import 'package:flutter_application_9_klitou/features/profile/pages/notification_page.dart';
-import 'package:flutter_application_9_klitou/features/profile/pages/profile_update_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-List AppInfo = [
+List appInfo = [
   {'title': 'Help & Support', 'image': 'assets/imgs/integoration.png'},
 
   {'title': 'Privacy Policy', 'image': 'assets/imgs/privacy_policy.png'},
@@ -72,7 +71,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                context.pop();
               },
               child: Image.asset('assets/imgs/back.png', height: 25, width: 25),
             ),
@@ -88,10 +87,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationPage()),
-                );
+                context.push('/notifications');
               },
               child: Image.asset('assets/imgs/bell.png', height: 25, width: 25),
             ),
@@ -143,7 +139,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             return GestureDetector(
                               onTap: () {
                                 if(index == 0){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileUpdatePage(),));
+                                 context.push('/profileupdate');
                                 }
                               },
                               child: Container(
@@ -456,7 +452,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: 3,
                           itemBuilder: (context, index) {
-                            var set = AppInfo[index] as Map? ?? {};
+                            var set = appInfo[index] as Map? ?? {};
                             return GestureDetector(
                               onTap: () {},
                               child: Container(

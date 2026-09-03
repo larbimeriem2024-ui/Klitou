@@ -2,19 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/features/meals/pages/menu_page.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
 import 'package:flutter_application_9_klitou/features/meals/state/notifiers/meals_notifier.dart';
 import 'package:flutter_application_9_klitou/features/meals/widgets/dish_view.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/view_all.dart';
 import 'package:flutter_application_9_klitou/features/meals/state/providers/meals_provider.dart';
-import 'package:flutter_application_9_klitou/features/orders/pages/order_meal.dart';
 import 'package:flutter_application_9_klitou/features/profile/state/providers/profile_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 List <String> row=[
   'All',
-  'Traditional',
+  'Traditional', 
   'Healthy',
   'Easter',
 ];
@@ -28,7 +27,7 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
  
-  bool isloadingp= false;
+ 
   int selected = 0;
   int index = 0;
   
@@ -174,7 +173,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
 
                   ViewAll(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuPage(),));
+                    context.go('/menu');
                   },),
                 ],
               ),
@@ -195,7 +194,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           
                         meal: dish ,
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => OrderMeal(meal: dish),));
+                          context.push('/order-meal', extra: dish);
                           
                         },),
                       );

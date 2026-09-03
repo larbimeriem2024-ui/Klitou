@@ -12,6 +12,9 @@ class AuthRepository {
 
   Stream<AuthState> get authStateChanges {
     return _client.auth.onAuthStateChange.map((data) {
+       if (data.event == AuthChangeEvent.passwordRecovery) {
+      return const AuthPasswordRecovery();
+    }
       final session = data.session;
       if (session != null) {
         return AuthAuthenticated(session.user);
@@ -105,7 +108,7 @@ class AuthRepository {
 
   Future <void> verifyEmailForRestPassword(String email)async{
     await _client.auth.resetPasswordForEmail(email, 
-    redirectTo: kIsWeb? null : 'io.supabase.flutter://login-callback');
+    redirectTo: kIsWeb? null : 'io.supabase.flutter://reset-password-callback');
     
   }
 

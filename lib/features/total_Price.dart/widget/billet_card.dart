@@ -40,7 +40,7 @@ class BilletCard extends ConsumerWidget {
                   children: [
                     DescriptionText(title: 'SubTotal'),
                     Text(
-                      '700',
+                      totalPrice.toString(),
                       style: TextStyle(
                         color: AppColor.description,
                         fontSize: 16,
@@ -58,7 +58,7 @@ class BilletCard extends ConsumerWidget {
                   children: [
                     DescriptionText(title: 'Delivery Fee'),
                     Text(
-                      '100.00',
+                      '00.00',
                       style: TextStyle(
                         color: AppColor.description,
                         fontSize: 16,

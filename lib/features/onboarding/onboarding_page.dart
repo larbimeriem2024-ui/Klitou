@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
-import 'package:flutter_application_9_klitou/features/auth/pages/login/sign_up_page.dart';
+import 'package:go_router/go_router.dart';
 
 
 List pages = [
@@ -134,11 +134,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   onClicked: () {
                     selectedpage++;
                     if (selectedpage>=3){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUpPage(),)
-                        );
+                      context.push('/signup');
                     }
                     controller.animateToPage(selectedpage, duration: Duration(microseconds: 500), curve: Curves.bounceInOut);
                   },

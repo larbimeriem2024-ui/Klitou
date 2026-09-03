@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
-class StartupPage extends StatefulWidget {
+class StartupPage extends ConsumerWidget {
   const StartupPage({super.key});
 
   @override
-  State<StartupPage> createState() => _StartupPageState();
-}
-
-class _StartupPageState extends State<StartupPage> {
-
-  
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(splashProvider);
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       body: Center(

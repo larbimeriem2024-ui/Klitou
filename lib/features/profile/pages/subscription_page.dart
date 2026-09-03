@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/subscription_box.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/why_subscribe.dart';
-import 'package:flutter_application_9_klitou/features/profile/pages/notification_page.dart';
+import 'package:go_router/go_router.dart';
 
 List subs = [
   {
@@ -90,7 +90,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                context.pop();
               },
               child: Image.asset(
                 'assets/imgs/back.png', 
@@ -113,7 +113,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         
             GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage(),));
+                context.push('/notifications');
               },
               child: Image.asset(
                 'assets/imgs/bell.png', 

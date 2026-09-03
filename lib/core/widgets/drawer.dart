@@ -99,7 +99,7 @@ class AppDrawer extends ConsumerWidget {
               Expanded(
                 child: ListView.separated(
                   itemCount: kDrawerDestinations.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final dest = kDrawerDestinations[index];
 
@@ -109,10 +109,10 @@ class AppDrawer extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
                           // Close the drawer first
-                          Navigator.of(context).pop();
+                          context.pop();
 
                           // Then navigate
-                          context.go(dest.path);
+                          context.push(dest.path);
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(

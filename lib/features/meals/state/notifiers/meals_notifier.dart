@@ -10,7 +10,7 @@ class MealsNotifier extends AsyncNotifier<List<Meal>>  {
 
   @override
   FutureOr<List<Meal>> build() async{
-    final meals = await ref.watch(getMealsProvider).value ?? [];
+    final meals = ref.watch(getMealsProvider).value ?? [];
 
     return meals;
     

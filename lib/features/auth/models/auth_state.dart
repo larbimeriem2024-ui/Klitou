@@ -21,6 +21,10 @@ class AuthUnauthenticated extends AuthState {
   const AuthUnauthenticated();
 }
 
+class AuthPasswordRecovery extends AuthState {
+  const AuthPasswordRecovery();
+}
+
 class AuthError extends AuthState {
   final String message;
   const AuthError(this.message);

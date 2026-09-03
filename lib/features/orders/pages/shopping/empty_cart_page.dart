@@ -5,13 +5,13 @@ import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/view_all.dart';
 import 'package:flutter_application_9_klitou/features/meals/state/notifiers/meals_notifier.dart';
 import 'package:flutter_application_9_klitou/features/meals/widgets/recommended_meals.dart';
-import 'package:flutter_application_9_klitou/features/orders/pages/order_meal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class EmptyCartPage extends ConsumerStatefulWidget {
-  final VoidCallback exploreDishes;
+  
 
-  const EmptyCartPage({super.key, required this.exploreDishes});
+  const EmptyCartPage({super.key, });
   
 
   @override
@@ -52,7 +52,9 @@ class _EmptyCartPageState extends ConsumerState<EmptyCartPage> {
                   ),
                   SizedBox(height: 16),
                   Button(
-                    onClicked: widget.exploreDishes,
+                    onClicked: () {
+                    context.go('/menu');
+                    },
                     color: AppColor.apptheme,
                     title: 'Browse Dishes',
                     fontColor: AppColor.white,
@@ -62,7 +64,7 @@ class _EmptyCartPageState extends ConsumerState<EmptyCartPage> {
                         
                   Button(
                     onClicked: () {
-                      
+                      context.push('/orders');
                     }, 
                     color: AppColor.backgroundColor, 
                     title: 'View Past Orders', 
@@ -84,7 +86,9 @@ class _EmptyCartPageState extends ConsumerState<EmptyCartPage> {
                         ),
                       ),
                         
-                      ViewAll(onPressed: widget.exploreDishes),
+                      ViewAll(onPressed: () {
+                        context.go('/menu');
+                      },),
                         
                       
                     ],
@@ -103,7 +107,7 @@ class _EmptyCartPageState extends ConsumerState<EmptyCartPage> {
                           
                         meal: dish ,
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => OrderMeal(meal: dish),));
+                          context.push('/order-meal', extra: dish);
                           
                         },);
                       }, ),

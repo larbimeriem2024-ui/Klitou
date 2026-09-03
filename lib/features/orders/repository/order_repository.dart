@@ -1,128 +1,82 @@
-
+import 'package:flutter_application_9_klitou/features/orders/models/my_order_model.dart';
 import 'package:flutter_application_9_klitou/features/orders/models/order_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class OrderRepository  {
-  final SupabaseClient client;
-   OrderRepository({
-    required this.client
-  });
-  
+class OrderRepository {
+  final SupabaseClient _client;
+  OrderRepository({required SupabaseClient client}) : _client = client;
 
-  Future<int> orderNow({
-    required Order order
-  }) async {
-    
-final userId = client.auth.currentUser!.id;
-   final data = await client.from('cart')
-    .insert({
-      ...order.toJson(), 
-      'user_id':userId
-    })
-    .select('id')
-    .single();
-    return data['id'] as int;
-
-
-
-    
+  String get _uid {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw StateError('Not authenticated');
+    }
+    return user.id;
   }
 
-    Future<List<Order>> getCart() async {
-    final user = Supabase.instance.client.auth.currentUser;
-    
-    
+  Future<int> orderNow({required Order order}) async {
+    final data = await _client
+        .from('cart')
+        .insert({...order.toJson(), 'user_id': _uid})
+        .select('id')
+        .single();
+    return data['id'] as int;
+  }
 
-    final data = await Supabase.instance.client
+  Future<List<Order>> getCart() async {
+    final data = await _client
         .from('cart')
         .select('''
               *,
            meals(*)
                  ''')
-        .eq('user_id', user!.id);
-        
-
-        print('here are your orders orders orders: $data');
+        .eq('user_id', _uid);
 
     return data.map((order) {
-      return Order.fromJson(order );
-      
-    },).toList();
+      return Order.fromJson(order);
+    }).toList();
   }
 
-
-
-   Future<void> deleteCart(int id)  async  {
+  Future<void> deleteCart(int id) async {
     await Supabase.instance.client
         .from('cart')
         .delete()
-        .eq('id', id);
-        
-        
-    
-    
+        .eq('id', id)
+        .eq('user_id', _uid);
   }
 
-
-  static Future<double> getCartTotal() async {
-  final user = Supabase.instance.client.auth.currentUser;
-
-  if (user == null) {
-    throw Exception("User not logged in");
-  }
-
-  final result = await Supabase.instance.client.rpc(
-    'get_cart_total',
-    params: {
-      'p_user_id': user.id,
-    },
-  );
-
-  return (result as num).toDouble();
-}
-
-static Future <List<Map<String, dynamic>>> getPreaparingMeals()async{
-  final supabase = Supabase.instance.client;
-  final user = supabase.auth.currentUser;
-
-  if(user == null){
-    throw Exception('user not logged in ');
-  }
-  final data = await supabase.from('order_items')
-  .select('''
+  Future<List<MyOrder>> getPreaparingMeals() async {
+    final data = await _client
+        .from('order_items')
+        .select('''
 *,
-meals(*),
-orders!inner(status)
+meals(*)
       
-    '''
-)
-.eq('user_id', user.id)
-.eq('orders.status', 'paid');
+    ''')
+        .eq('user_id', _uid)
+        .eq('status', 'paid');
 
 
-return List<Map<String, dynamic>>.from(data);
-}
-
-static Future <List<Map<String, dynamic>>> getPassedMeals()async{
-  final supabase = Supabase.instance.client;
-  final user = supabase.auth.currentUser;
-
-  if(user == null){
-    throw Exception('user not logged in ');
+    return data.map((myorder) {
+      return MyOrder.fromJson(myorder);
+    }).toList();
   }
-  final data = await supabase.from('order_items')
-  .select('''
+
+   Future<List<MyOrder>> getPassedMeals() async {
+    
+   
+    final data = await _client
+        .from('order_items')
+        .select('''
 *,
-meals(*),
-orders!inner(status)
+meals(*)
       
-    '''
-)
-.eq('user_id', user.id)
-.eq('orders.status', 'done');
+    ''')
+        .eq('user_id', _uid)
+        .eq('status', 'delivered');
 
-
-return List<Map<String, dynamic>>.from(data);
-}
-
+    return data.map((myorder) {
+      return MyOrder.fromJson(myorder);
+    },).toList();
+  }
 }
