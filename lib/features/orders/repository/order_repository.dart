@@ -1,5 +1,5 @@
 import 'package:flutter_application_9_klitou/features/orders/models/my_order_model.dart';
-import 'package:flutter_application_9_klitou/features/orders/models/order_model.dart';
+import 'package:flutter_application_9_klitou/features/orders/models/cart_item_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class OrderRepository {
@@ -14,16 +14,16 @@ class OrderRepository {
     return user.id;
   }
 
-  Future<int> orderNow({required Order order}) async {
+  Future<int> addToCart({required CartItem item}) async {
     final data = await _client
         .from('cart')
-        .insert({...order.toJson(), 'user_id': _uid})
+        .insert({...item.toJson(), 'user_id': _uid})
         .select('id')
         .single();
     return data['id'] as int;
   }
 
-  Future<List<Order>> getCart() async {
+  Future<List<CartItem>> getCart() async {
     final data = await _client
         .from('cart')
         .select('''
@@ -32,12 +32,12 @@ class OrderRepository {
                  ''')
         .eq('user_id', _uid);
 
-    return data.map((order) {
-      return Order.fromJson(order);
+    return data.map((item) {
+      return CartItem.fromJson(item);
     }).toList();
   }
 
-  Future<void> deleteCart(int id) async {
+  Future<void> deleteCartItem(int id) async {
     await Supabase.instance.client
         .from('cart')
         .delete()

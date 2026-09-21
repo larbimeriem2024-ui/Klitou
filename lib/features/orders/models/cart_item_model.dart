@@ -1,18 +1,18 @@
 import 'package:flutter_application_9_klitou/features/meals/models/meal_model.dart';
 
-class Order{
+class CartItem{
   final int? id;
   final Meal meal;
   final double price;
   final int quantity; 
-  final DateTime deliveryDate;
+  final DateTime deliveryAt;
 
- const Order({
+ const CartItem({
     this.id,
     required this.meal,
     required this.price, 
     required this.quantity,
-    required this.deliveryDate
+    required this.deliveryAt
   });
 
   Map<String, dynamic> toJson(){
@@ -20,17 +20,17 @@ class Order{
       'meal_id': meal.id,
       'price': price,
       'quantity' : quantity,
-      'date': deliveryDate.toIso8601String()
+      'date': deliveryAt.toIso8601String()
     };
   }
 
-  factory Order.fromJson (Map<String, dynamic> json){
-    return Order(
+  factory CartItem.fromJson (Map<String, dynamic> json){
+    return CartItem(
       id: json['id'] as int,
       meal: Meal.fromJson(json['meals'] as Map<String, dynamic>), 
-      price: json['price'] as double, 
+      price: (json['price'] as num).toDouble(), 
       quantity: json['quantity'] as int, 
-      deliveryDate: DateTime.parse(json['date'] as String));
+      deliveryAt: DateTime.parse(json['date'] as String));
   }
 
 }

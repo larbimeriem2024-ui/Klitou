@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/features/auth/errors/auth_error_message.dart';
+import 'package:flutter_application_9_klitou/features/auth/state/providers/login_provider.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
 import 'package:flutter_application_9_klitou/features/auth/widgets/textfield.dart';
-import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
@@ -37,6 +38,19 @@ class _ForgetPasswordEmailState extends ConsumerState<ForgetPasswordEmail> {
   }
   @override
   Widget build(BuildContext context) {
+    final forgotPasswordState = ref.watch(forgotPasswordNotifierProvider);
+    final isLoading = forgotPasswordState.isLoading;
+    ref.listen(forgotPasswordNotifierProvider, (previous, next) {
+  next.whenOrNull(
+    error: (error, stackTrace) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(getAuthErrorMessage(error)),
+        ),
+      );
+    },
+  );
+});
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       appBar: AppBar(
@@ -93,15 +107,23 @@ class _ForgetPasswordEmailState extends ConsumerState<ForgetPasswordEmail> {
                 }
                 
             
-                await ref.read(authRepositoryProvider).verifyEmailForRestPassword(emailcontroller.text);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('CHECK YOUR Inbox To Reset Your Password')),
+                await ref.read(forgotPasswordNotifierProvider.notifier).sendResetEmail(emailcontroller.text);
+
+                 if (!mounted) return;
+
+  if (!ref.read(forgotPasswordNotifierProvider).hasError) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('CHECK YOUR Inbox To Reset Your Password'),
+      ),
+    );
+  }
                   
-                );
+                
                 
               } , 
               color: AppColor.apptheme, 
-              title: 'Send', 
+              title: isLoading ?'Sending' : 'Send', 
               fontColor: AppColor.white, 
               isborder: false)
             

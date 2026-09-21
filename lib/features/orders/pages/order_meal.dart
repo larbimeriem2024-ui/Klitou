@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/core/constants/my_classes/time_box.dart';
-import 'package:flutter_application_9_klitou/features/orders/state/providers/order_provider.dart';
-import 'package:flutter_application_9_klitou/shared/common_widgets/date_box.dart';
-import 'package:flutter_application_9_klitou/shared/common_widgets/quantity_view.dart';
-import 'package:flutter_application_9_klitou/shared/common_widgets/time_box.dart';
+import 'package:flutter_application_9_klitou/features/orders/state/providers/cart_provider.dart';
+import 'package:flutter_application_9_klitou/features/orders/widget/meal_date_picker.dart';
+import 'package:flutter_application_9_klitou/features/orders/widget/meal_header.dart';
+import 'package:flutter_application_9_klitou/features/orders/widget/meal_time_picker.dart';
+import 'package:flutter_application_9_klitou/features/orders/widget/quantity_view_all.dart';
+import 'package:flutter_application_9_klitou/features/orders/widget/schedule_delivery_calendar.dart';
+import 'package:flutter_application_9_klitou/features/orders/widget/schedule_delivery_date.dart';
 import 'package:flutter_application_9_klitou/features/meals/models/meal_model.dart';
-import 'package:flutter_application_9_klitou/features/orders/models/order_model.dart';
+import 'package:flutter_application_9_klitou/features/orders/models/cart_item_model.dart';
 import 'package:flutter_application_9_klitou/features/orders/pages/order_added_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-
 
 final mealtimes = [
   TimeBoxF(period: 'Lunch', time: TimeOfDay(hour: 12, minute: 30)),
   TimeBoxF(period: 'Noon', time: TimeOfDay(hour: 13, minute: 15)),
 ];
-
-late DateTime selectedDate;
-late TimeOfDay selectedTime;
 
 class OrderMeal extends ConsumerStatefulWidget {
   final Meal meal;
@@ -31,31 +29,36 @@ class OrderMeal extends ConsumerStatefulWidget {
 }
 
 class _OrderMealState extends ConsumerState<OrderMeal> {
+  int quantity = 1;
   int selectedIndexTime = 0;
   int selectedIndexDay = 0;
-  int quantity = 1;
-  DateTime date = DateTime.now();
-  TimeOfDay twelveThirty = TimeOfDay(hour: 12, minute: 30);
-  final today = DateTime.now();
 
-  List<DateTime> get dates => List.generate(
-    7,
-    (index) => DateTime(today.year, today.month, today.day + index),
-  );
+  final DateTime now = DateTime.now();
+
   late DateTime selectedDate;
-
-  TimeOfDay selectedTime = mealtimes[0].time;
+  late TimeOfDay selectedTime;
 
   @override
   void initState() {
-    selectedDate = dates[0];
-
     super.initState();
+    selectedDate = _availableDates[0];
+    selectedTime = mealtimes.first.time;
   }
+
+  List<DateTime> get _availableDates => List.generate(7, (index) {
+    final date = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).add(Duration(days: index));
+    return date;
+  });
 
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
+    var state = ref.watch(cartProvider);
+    var isLodading = state.isLoading;
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       body: SingleChildScrollView(
@@ -75,7 +78,7 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
 
                 InkWell(
                   onTap: () {
-                      context.pop();
+                    context.pop();
                   },
                   child: SafeArea(
                     child: Padding(
@@ -111,187 +114,47 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          widget.meal.title,
-                          style: TextStyle(
-                            color: AppColor.apptheme,
-                            fontSize: 25,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColor.fieldBg,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: AppColor.rowbox),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/imgs/star.png',
-                                  height: 20,
-                                  width: 20,
-                                  color: AppColor.apptheme,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  '4.8',
-                                  style: TextStyle(
-                                    color: AppColor.apptheme,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    MealHeader(meal: widget.meal),
                     SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Quantity',
-                          style: TextStyle(
-                            color: AppColor.fontColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        QuantityView(
-                          quantity: (valueChanged) {
-                            quantity = valueChanged;
-                          },
-                        ),
-                      ],
-                    ),
+                   QuantityViewAll(quantity: (value) {
+                     quantity = value;
+                   },),
 
                     SizedBox(height: 16),
 
                     SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Schedule Delivery ',
-                          style: TextStyle(
-                            color: AppColor.fontColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-
-                        InkWell(
-                          onTap: () {},
-                          child: Text(
-                            'Change Date',
-                            style: TextStyle(
-                              color: AppColor.apptheme,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    ScheduleDeliveryDate(),
                     SizedBox(height: 16),
 
-                    SizedBox(
-                      height: 120,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-
-                        itemCount: mealtimes.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: TimeBox(
-                              time: mealtimes[index].time,
-                              period: mealtimes[index].period,
-                              isSelected: selectedIndexTime == index,
-                              onTap: () {
-                                setState(() {
-                                  selectedIndexTime = index;
-                                  selectedTime =
-                                      mealtimes[selectedIndexTime].time;
-                                });
-                              },
-                            ),
-                          );
-                        },
-                      ),
+                    MealTimePicker(
+                      mealtimes: mealtimes,
+                      selectedIndex: selectedIndexTime,
+                      onSelected: (index) {
+                        setState(() {
+                          selectedIndexTime = index;
+                          selectedTime = mealtimes[selectedIndexTime].time;
+                        });
+                      },
                     ),
                     SizedBox(height: 32),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Schedule Delivery ',
-                          style: TextStyle(
-                            color: AppColor.fontColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-
-                        InkWell(
-                          onTap: () {},
-                          child: Text(
-                            'View Calendar',
-                            style: TextStyle(
-                              color: AppColor.apptheme,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    ScheduleDeliveryCalendar(),
                     SizedBox(height: 16),
-                    SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: DateBox(
-                              dayName: DateFormat('EEE').format(dates[index]),
-                              dayDate: dates[index].day.toString().padLeft(
-                                2,
-                                '0',
-                              ),
-                              isSelected: selectedIndexDay == index,
-                              onTap: () {
-                                setState(() {
+                    
+
+                    MealDatePicker(selectedIndex: selectedIndexDay, availableDates: _availableDates, onPressed: (index) { setState(() {
                                   selectedIndexDay = index;
-                                  selectedDate = dates[selectedIndexDay];
+                                  selectedDate =
+                                      _availableDates[selectedIndexDay];
                                 });
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                      
+                    },),
 
                     SizedBox(height: 48),
 
-                    SizedBox(height: 32),
+                    
                     InkWell(
                       onTap: () async {
-                        date = DateTime(
+                        final deliveryAt = DateTime(
                           selectedDate.year,
                           selectedDate.month,
                           selectedDate.day,
@@ -299,14 +162,8 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
                           selectedTime.minute,
                         );
 
-                        final order = Order(
-                          
-                          meal: widget.meal, 
-                          price: widget.meal.price, 
-                          quantity: quantity, 
-                          deliveryDate: date);
-
-                        if (date.difference(DateTime.now()) <
+                        // must be ordered at least 12 hs in advance
+                        if (deliveryAt.difference(DateTime.now()) <
                             Duration(hours: 12)) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -317,8 +174,16 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
                           );
                           return;
                         }
+                        final cartItem = CartItem(
+                          meal: widget.meal,
+                          price: widget.meal.price,
+                          quantity: quantity,
+                          deliveryAt: deliveryAt,
+                        );
                         try {
-                          await ref.read(allOrdersProvider.notifier).addOrder(order);
+                          await ref
+                              .read(cartProvider.notifier)
+                              .addToCart(cartItem);
 
                           if (!context.mounted) return;
 
@@ -326,19 +191,18 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
                             backgroundColor: AppColor.backgroundColor,
                             context: context,
                             isScrollControlled: true,
-                            builder: (context) => OrderPlacedView(item: widget.meal.title),
+                            builder: (context) =>
+                                OrderPlacedView(item: widget.meal.title),
                           );
                         } catch (e) {
                           if (!context.mounted) return;
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Failed to place order: $e'),
+                              content: Text('Failed to add item to cart: $e'),
                             ),
                           );
                         }
-
-                       
                       },
                       child: Container(
                         height: 55,
@@ -357,7 +221,7 @@ class _OrderMealState extends ConsumerState<OrderMeal> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Add to Cart',
+                                isLodading ? 'Adding To Cart' : 'Add To Cart',
                                 style: TextStyle(
                                   color: AppColor.backgroundColor,
                                   fontWeight: FontWeight.w500,

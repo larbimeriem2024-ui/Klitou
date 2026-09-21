@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/features/orders/state/providers/order_provider.dart';
-import 'package:flutter_application_9_klitou/features/orders/widget/my_orders_dish.dart';
 
+import 'package:flutter_application_9_klitou/features/orders/widget/ongoing_orders.dart';
+import 'package:flutter_application_9_klitou/features/orders/widget/past_orders.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/notification_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,9 +22,7 @@ class _MyOrdersPageState extends ConsumerState<MyOrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final myPreparingOrders = ref.watch(preparingOrderProvider);
-    final myDoneOrders = ref.watch(myDoneOrderProvider);
-    final onGoingOrders = myPreparingOrders.value!.length;
+   
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       appBar: AppBar(
@@ -68,95 +66,10 @@ class _MyOrdersPageState extends ConsumerState<MyOrdersPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'In PROGRESS',
-                    style: TextStyle(
-                      color: AppColor.apptheme,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
-                  Text(
-                    '$onGoingOrders Active',
-                    style: TextStyle(
-                      color: AppColor.description,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+              OngoingOrders(),
 
               SizedBox(height: 16),
-
-              myPreparingOrders.when(
-                data: (order) {
-
-                return ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: order.length,
-                    itemBuilder: (context, index) {
-                      final dish = order[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: MyOrdersDish(
-                           order: dish,
-                           isInProgress: true,
-                          ),));
-              });},
-              error: (error, stackTrace) {
-                
-                return Text(error.toString());
-                
-                },
-              loading: () => CircularProgressIndicator(),
-              ),
-
-              SizedBox(height: 16),
-              Text(
-                'PAST ORDERS',
-                style: TextStyle(
-                  color: AppColor.description,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-
-              SizedBox(height: 16),
-
-              myDoneOrders.when(
-                data: (order) {
-
-                return ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: order.length,
-                    itemBuilder: (context, index) {
-                      final dish = order[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: MyOrdersDish(
-                           order: dish,
-                           isInProgress: false,
-                          ),));
-              });},
-              error: (error, stackTrace) {
-                
-                return Text(error.toString());
-                
-                },
-              loading: () => CircularProgressIndicator(),
-              ),
-
+              PastOrders(),
               
             ],
           ),

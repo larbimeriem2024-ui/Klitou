@@ -1,4 +1,6 @@
+// deno-lint-ignore no-import-prefix
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+// deno-lint-ignore no-import-prefix
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 Deno.serve(async (req) => {
@@ -104,6 +106,7 @@ if (!contactUuid) {
   const lastName = nameParts.slice(1).join(" ") || "User";
 
   // Generate pure numeric unique RIB (20 digits)
+  // deno-lint-ignore no-inner-declarations
   function generateUniqueRib(userId: string): string {
     let numbers = userId.replace(/\D/g, "");
     while (numbers.length < 20) {
@@ -209,6 +212,11 @@ if (!contactUuid) {
     );
 
     const payment = await invoiceRes.json();
+    console.log("SLICKPAY PAYMENT:", {
+  id: payment.id,
+  url: payment.url,
+  success: payment.success,
+});
     console.log("SlickPay response:", payment);
 
     if (!invoiceRes.ok || payment.success !== 1) {

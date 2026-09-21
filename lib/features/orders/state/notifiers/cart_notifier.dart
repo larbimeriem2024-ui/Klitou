@@ -3,35 +3,35 @@
 import 'dart:async';
 
 import 'package:flutter_application_9_klitou/features/orders/models/my_order_model.dart';
-import 'package:flutter_application_9_klitou/features/orders/models/order_model.dart';
+import 'package:flutter_application_9_klitou/features/orders/models/cart_item_model.dart';
 import 'package:flutter_application_9_klitou/features/orders/repository/order_repository.dart';
-import 'package:flutter_application_9_klitou/features/orders/state/providers/order_provider.dart';
+import 'package:flutter_application_9_klitou/features/orders/state/providers/cart_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OrderNotifier extends AsyncNotifier<List<Order>> {
+class CartNotifier extends AsyncNotifier<List<CartItem>> {
   OrderRepository get _repository =>
-    ref.read(orderRepositoryProvider);
+    ref.read(cartRepositoryProvider);
 
   @override
-  FutureOr<List<Order>> build()async {
+  FutureOr<List<CartItem>> build()async {
     
     return _repository.getCart();
   }
 
 
-  Future<void> addOrder(Order order) async {
-  final repository = ref.read(orderProvider);
+  Future<void> addToCart(CartItem item) async {
+  final repository = ref.read(cartRepositoryProvider);
   final currentOrders = state.value ?? [];
 
   state = await AsyncValue.guard(() async {
-    final id = await repository.orderNow(order: order);
+    final id = await repository.addToCart(item: item);
 
-    final addedOrder = Order(
+    final addedOrder = CartItem(
       id: id,
-      meal: order.meal,
-      price: order.price,
-      quantity: order.quantity,
-      deliveryDate: order.deliveryDate,
+      meal: item.meal,
+      price: item.price,
+      quantity: item.quantity,
+      deliveryAt: item.deliveryAt,
     );
 
     return [...currentOrders, addedOrder];
@@ -40,8 +40,8 @@ class OrderNotifier extends AsyncNotifier<List<Order>> {
 
   
 
-  Future<void> deleteOrder(int index) async{
-    final repository = ref.read(orderProvider);
+  Future<void> removeFromCart(int index) async{
+    final repository = ref.read(cartRepositoryProvider);
     final currentOrders = state.value ?? [];
     
     final order= currentOrders[index];
@@ -49,7 +49,7 @@ class OrderNotifier extends AsyncNotifier<List<Order>> {
     state = AsyncLoading();
     state = await AsyncValue.guard(()async {
      
-      await repository.deleteCart(order.id!);
+      await repository.deleteCartItem(order.id!);
       
       final updatedOrder = [...currentOrders]..removeAt(index);
       return updatedOrder;
@@ -63,7 +63,7 @@ class OrderNotifier extends AsyncNotifier<List<Order>> {
 
 class MyPreparingOrder extends AsyncNotifier<List<MyOrder>> {
    OrderRepository get _repository =>
-    ref.read(orderRepositoryProvider);
+    ref.read(cartRepositoryProvider);
 
   @override
   FutureOr<List<MyOrder>> build()async {
@@ -79,7 +79,7 @@ class MyPreparingOrder extends AsyncNotifier<List<MyOrder>> {
 
 class MyDoneOrder extends AsyncNotifier<List<MyOrder>> {
    OrderRepository get _repository =>
-    ref.read(orderRepositoryProvider);
+    ref.read(cartRepositoryProvider);
 
   @override
   FutureOr<List<MyOrder>> build()async {

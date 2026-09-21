@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/features/auth/errors/auth_error_message.dart';
+import 'package:flutter_application_9_klitou/features/auth/state/providers/login_provider.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
-import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ResetPasswordPage extends ConsumerStatefulWidget {
@@ -42,6 +43,18 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   }
   @override
   Widget build(BuildContext context) {
+    final resetPasswordState = ref.watch(resetPasswordNotifierProvider);
+    final isLoading = resetPasswordState.isLoading;
+    ref.listen(resetPasswordNotifierProvider, (previous, next) {
+  if (previous?.isLoading == true && next.hasError) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(getAuthErrorMessage(next.error!)),
+      ),
+    );
+  }
+});
+  
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       appBar: AppBar(
@@ -155,7 +168,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                   fillColor: AppColor.fieldBg,
                 
                   hint: Text(
-                    'Confirm your New Passwrod, ',
+                    'Enter your New Passwrod, ',
                     style: TextStyle(
                       color: AppColor.fieldText,
                       fontWeight: FontWeight.w400,
@@ -249,7 +262,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                   fillColor: AppColor.fieldBg,
                 
                   hint: Text(
-                    'Enter your Passwrod',
+                    'Confirm your Passwrod',
                     style: TextStyle(
                       color: AppColor.fieldText,
                       fontWeight: FontWeight.w400,
@@ -284,7 +297,9 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
         ),
             SizedBox(height: 48,),
             Button(
-              onClicked: () async{
+              onClicked: isLoading 
+              ? () {}
+              : () async{
                 if(!_keyForm.currentState!.validate()){
                    return ;
                 
@@ -298,11 +313,11 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                 return;
                 }
                 
-                await ref.read(authNotifierProvider.notifier).resetPassword(newpassowrdcontroller.text);
+                await ref.read(resetPasswordNotifierProvider.notifier).resetPassword(newpassowrdcontroller.text);
                 
               } , 
               color: AppColor.apptheme, 
-              title: 'Send', 
+              title: isLoading? 'Resetting' : 'Reset Password', 
               fontColor: AppColor.white, 
               isborder: false)
             ]),

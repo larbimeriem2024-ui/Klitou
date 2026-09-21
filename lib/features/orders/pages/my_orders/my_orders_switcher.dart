@@ -3,7 +3,7 @@ import 'package:flutter_application_9_klitou/features/orders/pages/my_orders/my_
 import 'package:flutter_application_9_klitou/features/orders/pages/my_orders/my_orders_both_empty_page.dart';
 import 'package:flutter_application_9_klitou/features/orders/pages/my_orders/my_orders_page.dart';
 import 'package:flutter_application_9_klitou/features/orders/pages/my_orders/my_past_orders_page.dart';
-import 'package:flutter_application_9_klitou/features/orders/state/providers/order_provider.dart';
+import 'package:flutter_application_9_klitou/features/orders/state/providers/cart_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MyOrdersSwitcher extends ConsumerWidget {

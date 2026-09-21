@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/app/navigation/main_destinations.dart';
+import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/app_color.dart';
-import '../../features/auth/state/notifier/auth_notifier.dart';
 import '../../features/profile/state/providers/profile_provider.dart';
 
 class AppDrawer extends ConsumerWidget {
@@ -33,73 +33,83 @@ class AppDrawer extends ConsumerWidget {
                   fontSize: 24,
                 ),
               ),
-              const SizedBox(height: 32),
+               SizedBox(height: 32),
 
               // ---------- Profile Header ----------
-              Row(
-                children: [
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration:  BoxDecoration(
-                      color: AppColor.apptheme,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/imgs/menu2.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  profileAsync.when(
-                    data: (profile) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            profile.name,
-                            style: TextStyle(
-                              color: AppColor.fontColor,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            profile.email,
-                            style: TextStyle(
-                              color: AppColor.description,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                    loading: () => const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                    error: (error, _) => Text(
-                      error.toString(),
-                      style: TextStyle(color: AppColor.red, fontSize: 12),
-                    ),
-                  ),
-                ],
+              profileAsync.when(
+  data: (profile) {
+    return Row(
+      children: [
+        Container(
+          height: 50,
+          width: 50,
+          decoration: BoxDecoration(
+            color: AppColor.apptheme,
+            shape: BoxShape.circle,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: ClipOval(
+              child: 
+                   Image.network(
+                      profile.avatar,
+                      fit: BoxFit.cover,
+                    )
+                 
+            ),
+          ),
+        ),
+
+        const SizedBox(width: 12),
+
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              profile.name,
+              style: TextStyle(
+                color: AppColor.fontColor,
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
               ),
-              const SizedBox(height: 32),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              profile.email,
+              style: TextStyle(
+                color: AppColor.description,
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  },
+
+  loading: () => const SizedBox(
+    height: 50,
+    child: Center(
+      child: CircularProgressIndicator(strokeWidth: 2),
+    ),
+  ),
+
+  error: (error, _) => Text(
+    error.toString(),
+    style: TextStyle(
+      color: AppColor.red,
+      fontSize: 12,
+    ),
+  ),
+),
+               SizedBox(height: 32),
 
               // ---------- Drawer Items ----------
               Expanded(
                 child: ListView.separated(
                   itemCount: kDrawerDestinations.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  separatorBuilder: (_, _) =>  SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final dest = kDrawerDestinations[index];
 
@@ -127,7 +137,7 @@ class AppDrawer extends ConsumerWidget {
                                 width: 20,
                                 color: AppColor.fontColor,
                               ),
-                              const SizedBox(width: 16),
+                               SizedBox(width: 16),
                               Text(
                                 dest.title,
                                 style: TextStyle(
@@ -147,7 +157,7 @@ class AppDrawer extends ConsumerWidget {
 
               // ---------- Divider ----------
               const Divider(),
-              const SizedBox(height: 16),
+               SizedBox(height: 16),
 
               // ---------- Sign Out ----------
               Material(
@@ -167,7 +177,7 @@ class AppDrawer extends ConsumerWidget {
                           height: 25,
                           width: 25,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           'Sign Out',
                           style: TextStyle(
@@ -181,7 +191,7 @@ class AppDrawer extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+               SizedBox(height: 20),
             ],
           ),
         ),

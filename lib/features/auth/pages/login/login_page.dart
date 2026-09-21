@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
+import 'package:flutter_application_9_klitou/features/auth/errors/auth_error_message.dart';
+import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart';
+import 'package:flutter_application_9_klitou/features/auth/state/providers/login_provider.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/big_title.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
 import 'package:flutter_application_9_klitou/features/auth/widgets/textfield.dart';
-import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -47,11 +49,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(loginNotifierProvider);
     final isLoading = authState.isLoading;
-    ref.listen(authNotifierProvider, (previous, next) {
+    ref.listen(loginNotifierProvider, (previous, next) {
       next.whenOrNull(
-        error: (error, stackTrace) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString()))),
+        error: (error, stackTrace) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(getAuthErrorMessage(error)))),
         
       );
     },);
@@ -228,7 +230,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         return;
                  }
              
-               await ref.read(authNotifierProvider.notifier).login(
+               await ref.read(loginNotifierProvider.notifier).login(
                email: emailcontroller.text, 
                password:  passwordcontroller.text);
               

@@ -35,7 +35,4 @@ final isAuthenticatedProvider = Provider<bool>((ref) {
 });
 
 
-final splashProvider = FutureProvider<bool>((ref) async {
-  await Future.delayed(const Duration(seconds: 3));
-  return true;
-});
+

@@ -7,8 +7,7 @@ import 'package:flutter_application_9_klitou/features/auth/pages/login/forget_pa
 import 'package:flutter_application_9_klitou/features/auth/pages/login/login_page.dart';
 import 'package:flutter_application_9_klitou/features/auth/pages/login/reset_password_page.dart';
 import 'package:flutter_application_9_klitou/features/auth/pages/login/sign_up_page.dart';
-import 'package:flutter_application_9_klitou/features/auth/state/notifier/auth_notifier.dart';
-import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart' hide authNotifierProvider;
+import 'package:flutter_application_9_klitou/features/auth/state/providers/auth_provider.dart';
 import 'package:flutter_application_9_klitou/features/meals/models/meal_model.dart';
 import 'package:flutter_application_9_klitou/features/meals/pages/home_page.dart';
 import 'package:flutter_application_9_klitou/features/meals/pages/menu_page.dart';
@@ -16,71 +15,71 @@ import 'package:flutter_application_9_klitou/features/orders/pages/my_orders/my_
 import 'package:flutter_application_9_klitou/features/orders/pages/order_meal.dart';
 import 'package:flutter_application_9_klitou/features/orders/pages/shopping/cart_switcher.dart';
 import 'package:flutter_application_9_klitou/features/onboarding/onboarding_page.dart';
-import 'package:flutter_application_9_klitou/features/onboarding/startup_page.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/help_support_page.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/notification_page.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/profile_page.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/profile_update_page.dart';
 import 'package:flutter_application_9_klitou/features/profile/pages/subscription_page.dart';
-import 'package:flutter_application_9_klitou/features/settings/settings_page.dart';
+import 'package:flutter_application_9_klitou/features/settings/pages/settings_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
 
   final router = GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/onboarding' ,
     redirect: (context, state) {
   final authState = ref.read(authNotifierProvider);
-  final splashState = ref.read(splashProvider);
 
+  final currentPath = state.matchedLocation;
+  
+ 
   if (authState.value is AuthPasswordRecovery) {
+    if(currentPath != '/resetpassword'){
     return '/resetpassword';
 }
 
-  
-  final currentPath = state.matchedLocation;
-
-  if (!splashState.hasValue) {
-    return currentPath == '/splash' ? null : '/splash';
+  return null;
   }
 
+  
+  
 
-  // Still loading auth state → stay on splash
+  
+
+
+  // Still loading auth state → stay 
   if (authState.isLoading || authState.isRefreshing) {
-    return currentPath == '/splash' ? null : '/splash';
+    return null;
   }
 
   final isLoggedIn = authState.value is AuthAuthenticated;
 
-  final isAuthRoute = currentPath == '/login' ||
+  final isAuthRoute = 
+      currentPath == '/login' ||
       currentPath == '/signup' ||
       currentPath == '/onboarding' ||
-      currentPath =='/forgetpassword' ;
+      currentPath =='/forgetpassword'||
+      currentPath == '/resetpassword';
+      
 
 
   
   // 2. Not logged in
   if (!isLoggedIn) {
-    // If we are on splash after loading finished → go to onboarding or login
-    if (currentPath == '/splash') {
-      return '/onboarding'; // or '/login' if you prefer
-    }
-
-    // Already on an auth page → stay
     if (isAuthRoute) {
-      return null;
-      
+      return null; 
     }
 
-    // Trying to access protected pages → send to login
-    return '/login';
+    
+    // Trying to access protected pages → send to onboarding
+    return '/onboarding';
   }
 
   // 3. Logged in
   if (isLoggedIn) {
     // Coming from splash or any auth page → go to home
-    if (currentPath == '/splash' || isAuthRoute) {
+    if (isAuthRoute) {
       return '/home';
     }
   }
@@ -89,10 +88,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 },
 
     routes:  [
-      GoRoute(
-        path: '/splash',
-        builder: (context, state) => const StartupPage(),
-      ),
+      
       GoRoute(
         path: '/onboarding',
         builder: (context, state) => const OnboardingPage(),
@@ -111,10 +107,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ForgetPasswordEmail(),
       ),
 
-      GoRoute(
-  path: '/resetpassword',
-  builder: (context, state) => const ResetPasswordPage(),
-),
+       GoRoute(
+        path: '/resetpassword',
+        builder: (context, state) => const ResetPasswordPage(),
+      ),
 
       ShellRoute(
         builder: (context, state, child) {
@@ -187,17 +183,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
   ref.listen(
     authNotifierProvider,
-    (_, _) {
+    (previous, next) {
+      
       router.refresh();
     },
   );
 
-  ref.listen(
-  splashProvider,
-  (_, _) {
-    router.refresh();
-  },
-);
+ 
 
   return router;
 });

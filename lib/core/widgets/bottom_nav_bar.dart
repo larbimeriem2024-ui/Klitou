@@ -55,7 +55,7 @@ class MainBottomNavBar extends StatelessWidget {
                             width: index == 2 ? 25 : 20,
                             fit: BoxFit.cover,
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: 2),
                           Text(
                             dest.label,
                             style: TextStyle(

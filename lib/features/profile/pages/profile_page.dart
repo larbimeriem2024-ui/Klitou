@@ -75,73 +75,66 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 80,
-                      width: 80,
-                      
-                      decoration: BoxDecoration(
-                        color: AppColor.white,
-                        shape: BoxShape.circle,
-                       
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: ClipOval(
-                          
-                          child: Image.asset('assets/imgs/menu2.png', 
-                          
-                          fit: BoxFit.cover,
-                          ),
-                                        
-                          
-                          
-                        ),
-                      ),
-                    ),
-                
-                
-                
-                
-                    SizedBox(height: 5,),
-
-                    profileAsync.when(data: (profile) {
-                      return Column(
-                        children: [
-
-                          Text(profile.name,
-                      style: TextStyle(
-                        color: AppColor.fontColor, 
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16, 
-                      ),
-                      ), 
-                
-                     SizedBox(height: 2,),
-                
-                    Text(profile.email,
-                      style: TextStyle(
-                        color: AppColor.description, 
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14, 
-                      ),
-                      ), 
-
-                        ],
-                      );
-                    }, 
-                    error: (error, stackTrace) => Text(error.toString()), 
-                    loading: () => CircularProgressIndicator(),)
-                
-                     
-                
-                      
-                  ],
-                ),
+  child: profileAsync.when(
+    data: (profile) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 80,
+            width: 80,
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              shape: BoxShape.circle,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: ClipOval(
+                child:  Image.network(
+                        profile.avatar,
+                        fit: BoxFit.cover,
+                      )
+                   
               ),
+            ),
+          ),
+
+          const SizedBox(height: 5),
+
+          Text(
+            profile.name,
+            style: TextStyle(
+              color: AppColor.fontColor,
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+            ),
+          ),
+
+          const SizedBox(height: 2),
+
+          Text(
+            profile.email,
+            style: TextStyle(
+              color: AppColor.description,
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      );
+    },
+
+    loading: () => const CircularProgressIndicator(),
+
+    error: (error, stackTrace) => Text(
+      error.toString(),
+      style: TextStyle(
+        color: AppColor.red,
+      ),
+    ),
+  ),
+),
 
               SizedBox(height: 32,),
 

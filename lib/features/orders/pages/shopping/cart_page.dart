@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
-import 'package:flutter_application_9_klitou/features/orders/state/providers/order_provider.dart';
+import 'package:flutter_application_9_klitou/features/orders/state/providers/cart_provider.dart';
 import 'package:flutter_application_9_klitou/features/total_Price.dart/widget/billet_card.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/button.dart';
 import 'package:flutter_application_9_klitou/features/orders/widget/bought_dish.dart';
@@ -20,7 +20,7 @@ class _ShoppingPageState extends ConsumerState<ShoppingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final orders = ref.watch(allOrdersProvider);
+    final orders = ref.watch(cartProvider);
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       body: SingleChildScrollView(
@@ -52,12 +52,12 @@ class _ShoppingPageState extends ConsumerState<ShoppingPage> {
                       final order = orders[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
-                        child: BoughtDish(
+                        child: CartDish(
                           order: order,
                           onDelete: () async {
                             await ref
-                                .read(allOrdersProvider.notifier)
-                                .deleteOrder(index);
+                                .read(cartProvider.notifier)
+                                .removeFromCart(index);
                           },
                         ),
                       );

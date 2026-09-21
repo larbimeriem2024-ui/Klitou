@@ -1,7 +1,9 @@
 
-
+import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_application_9_klitou/features/auth/errors/auth_failure.dart';
 import 'package:flutter_application_9_klitou/features/auth/models/auth_state.dart';
+import 'package:flutter_application_9_klitou/features/auth/models/signup_result.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
 class AuthRepository {
@@ -34,13 +36,13 @@ class AuthRepository {
 }
 
 
-  Future<User> signUp(
+  Future<SignupResult> signUp(
   String email,
   String password,
   String name,
   String phonen,
 ) async {
-    
+    try{
     final response =  await _client.auth.signUp(
       email: email,
       password: password,
@@ -53,37 +55,46 @@ class AuthRepository {
 
     final user = response.user;
     if(user == null){
-      throw const AuthException('Singup failed. please try again. ');
+      throw const UnknownAuthFailure();
     }
 
-    await _client.from('profile').insert({
-        'user_id': user.id,
-        'name': name,
-        'email': email,
-        'phonen': phonen,
-      });
+    
+
+      if (response.session != null ){
+        return const SignupAuthenticated();
+      }
 
     
 
 
 
-    return user;
+    return const SignupEmailVerificationRequired();
 
    
-
-    
+    }on AuthException catch(error){
+      throw _mapAuthException(error);
+    }on SocketException{
+      throw const NetworkFailure();
+    }
 }
 
   Future <void> login ({
     required String email,
     required String password}
     )async{
+      try{
 
      await _client.auth.signInWithPassword(
       email: email, 
       password: password
       );
-
+      } on AuthException catch(error){
+        throw _mapAuthException(error);
+      } on Exception {
+        throw const NetworkFailure();
+      } catch(_){
+        throw const UnknownAuthFailure();
+      }
      
   
 
@@ -93,7 +104,9 @@ class AuthRepository {
   Future <void> signinWithGoogle()async{
     await _client.auth.signInWithOAuth(
       OAuthProvider.google,
-      redirectTo: 'io.supabase.flutter://login-callback' );
+      redirectTo: kIsWeb
+      ? 'https://klitou-3e9a8.web.app'
+      : 'io.supabase.flutter://login-callback' );
   }
 
   Future <void> signinWithFacebook()async{
@@ -106,17 +119,43 @@ class AuthRepository {
     await _client.auth.signOut();
   }
 
-  Future <void> verifyEmailForRestPassword(String email)async{
-    await _client.auth.resetPasswordForEmail(email, 
-    redirectTo: kIsWeb? null : 'io.supabase.flutter://reset-password-callback');
-    
-  }
+  
 
   Future <void> resetPassword(String newPassword)async{
     await _client.auth.updateUser(UserAttributes(password: newPassword));
+  }
+
+  Future<void> verifyEmailForRestPassword(String email) async {
+    try{
+      await _client.auth.resetPasswordForEmail(
+        email, 
+        redirectTo: kIsWeb 
+        ? 'https://klitou-3e9a8.web.app/resetpassword'
+        : 'io.supabase.flutter://reset-password-callback');
+    }on AuthException catch (error){
+      throw _mapAuthException(error);
+    }
   }
 
 
 
 }
 
+AuthFailure _mapAuthException(AuthException error) {
+  switch (error.code) {
+    case 'user_already_exists':
+      return const EmailAlreadyRegistered();
+
+    case 'invalid_credentials':
+      return const InvalidCredentials();
+
+    case 'invalid_email':
+      return const InvalidEmail();
+
+    case 'weak_password':
+      return const WeakPassword();
+
+    default:
+      return const UnknownAuthFailure();
+  }
+}

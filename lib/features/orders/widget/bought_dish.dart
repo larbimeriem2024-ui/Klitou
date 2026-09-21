@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_9_klitou/features/orders/widget/delete_item.dart';
 import 'package:flutter_application_9_klitou/core/constants/app_color.dart';
 import 'package:flutter_application_9_klitou/shared/common_widgets/description_text.dart';
-import 'package:flutter_application_9_klitou/features/orders/models/order_model.dart';
+import 'package:flutter_application_9_klitou/features/orders/models/cart_item_model.dart';
 
-class BoughtDish extends StatelessWidget {
-  final Order order;
+class CartDish extends StatelessWidget {
+  final CartItem order;
   final VoidCallback onDelete;
 
-  const BoughtDish({
+  const CartDish({
     super.key,
     required this.order,
     required this.onDelete
@@ -94,7 +94,7 @@ class BoughtDish extends StatelessWidget {
                         ),
 
                       SizedBox(width: 5,), 
-                      DescriptionText(title: (order.deliveryDate).toString().split('.').first.substring(0,16)),
+                      DescriptionText(title: (order.deliveryAt).toString().split('.').first.substring(0,16)),
                     ],
                   ),
 
